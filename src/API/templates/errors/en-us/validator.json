@@ -1,0 +1,7 @@
+{
+    "validate": {
+        "code": 10300,
+        "statusCode": 400,
+        "message": "validate error!"
+    }
+}

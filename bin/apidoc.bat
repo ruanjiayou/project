@@ -1,0 +1,1 @@
+apidoc -i ./src/API/routes/ -o ./src/API/public/apidoc
