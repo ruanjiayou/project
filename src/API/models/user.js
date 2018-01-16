@@ -1,3 +1,6 @@
+// libs
+const authHelper = require('../libs/').auth;
+
 module.exports = function (sequelize, TYPE) {
     const model = sequelize.define('User',
         {
@@ -5,10 +8,6 @@ module.exports = function (sequelize, TYPE) {
                 type: TYPE.BIGINT,
                 autoIncrement: true,
                 primaryKey: true
-            },
-            roleId: {
-                type: TYPE.BIGINT,
-                allowNull: false
             },
             email: {
                 type: TYPE.STRING,
@@ -23,7 +22,8 @@ module.exports = function (sequelize, TYPE) {
             password: {
                 type: TYPE.STRING,
                 allowNull: false,
-                defaultValue: '123456'
+                // 123456 -> md5 -> sha1+salt
+                defaultValue: '100c2c9d9937d117b8e398a1ecd852222017c2d6'
             },
             avatar: {
                 type: TYPE.STRING,
@@ -38,21 +38,34 @@ module.exports = function (sequelize, TYPE) {
             status: {
                 type: TYPE.ENUM('activing', 'using', 'destroy'),
                 allowNull: false,
-                defaultValue: 'using'
+                defaultValue: 'activing'
             },
             country: {
                 type: TYPE.STRING,
                 allowNull: true
             },
+            gender: {
+                type: TYPE.ENUM('f', 'm'),
+                allowNull: false,
+                defaultValue: 'm'
+            },
+            phone: {
+                type: TYPE.STRING,
+                allowNull: true
+            },
+            birth: {
+                type: TYPE.DATE,
+                allowNull: false
+            },
             isApproved: {
                 type: TYPE.BOOLEAN,
                 allowNull: false,
-                defaultValue: true
+                defaultValue: false
             }
         }, {
             charset: 'utf8',
             //paranoid: true,
-            timestamp: true,
+            timestamps: true,
             deletedAt: false,
             timezone: '+08:00',
             //engine: 'MYISAM',
@@ -63,6 +76,16 @@ module.exports = function (sequelize, TYPE) {
                 }
             ],
             freezeTableName: true,
+            hooks: {
+                beforeCreate(instance, options) {
+                    instance.password = authHelper.encrypt(instance.password);
+                },
+                beforeUpdate(instance, options) {
+                    if (options.fields.includes('password')) {
+                        instance.password = authHelper.encrypt(instance.password);
+                    }
+                }
+            },
             getterMethods: {
 
             },
@@ -73,6 +96,9 @@ module.exports = function (sequelize, TYPE) {
             },
         });
     // 类级方法
+    model.prototype.comparePassword = function (password) {
+        return authHelper.encrypt(password).toUpperCase() === this.password.toUpperCase();
+    };
 
     // 实例方法
 
@@ -88,16 +114,24 @@ module.exports = function (sequelize, TYPE) {
         //model.hasMany(models.Book);
     };
     model.initialize = function () {
-        // const data = [
-        //     {
-        //         id: 1,
-        //         email: '123456789@qq.com',
-        //         name: '阮家友',
-        //         roleId: 1,
-        //         password: '100c2c9d9937d117b8e398a1ecd852222017c2d6'
-        //     }
-        // ];
-        // return model.bulkCreate(data, { return: true });
+        const data = [
+            {
+                id: 1,
+                email: '1439120442@qq.com',
+                name: '阮家友',
+                status: 'using',
+                password: '100c2c9d9937d117b8e398a1ecd852222017c2d6'
+            }
+        ];
+        return model.bulkCreate(data, { return: true });
+    };
+    model.prototype.toJSON = function () {
+        const res = this.dataValues;
+        //res.password = authHelper.encrypt(res.password);
+        delete res.password;
+        if (res.avatar === null) {
+            res.avatar = '/images/default-avatar.png';
+        }
     };
     return model;
 };

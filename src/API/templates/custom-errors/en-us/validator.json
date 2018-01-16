@@ -1,0 +1,27 @@
+{
+    "validate": {
+        "code": 10300,
+        "statusCode": 200,
+        "message": "验证错误!"
+    },
+    "required": {
+        "code": 10310,
+        "statusCode": 200,
+        "message": "{field}不能为空!"
+    },
+    "int": {
+        "code": 10310,
+        "statusCode": 200,
+        "message": "{field}必须为数字!"
+    },
+    "date": {
+        "code": 10310,
+        "statusCode": 200,
+        "message": "{field}必须是日期格式!"
+    },
+    "in": {
+        "code": 10310,
+        "statusCode": 200,
+        "message": "{field}不是预期的枚举值!"
+    }
+}

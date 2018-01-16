@@ -57,7 +57,7 @@
             loadData(waterFall);
             function loadData(func) {
                 $.ajax({
-                    url: 'http://api.images.jiayou.com/images?limit=30&page=' + page,
+                    url: '/images?limit=30&page=' + page,
                     type: 'get',
                     dataType: 'json',
                     success: function (d) {

@@ -4,6 +4,7 @@
  * abort()/ 处理自定义错误
  * 
  */
+const _ = require('lodash');
 const path = require('path');
 
 /**
@@ -36,7 +37,9 @@ const present = (params) => {
         page: 'page',
         search: 'search',
         order: 'order',
-        errDir: '../templates/errors'
+        customDir: '../templates/custom-errors',
+        validateDir: '../templates/custom-errors',
+        defaultLang: 'zh-cn'
     };
     for (let k in params) {
         d[k] = params[k];
@@ -50,8 +53,18 @@ const present = (params) => {
             let limit = parseInt(req.query[d.limit]);
             delete req.query[d.page];
             delete req.query[d.limit];
-            req.query.page = page ? page : 1;
-            req.query.limit = limit ? limit : 50;
+            if (!page) {
+                page = 1;
+            }
+            if (!limit) {
+                limit = 50;
+            }
+            req.query.page = page;
+            req.query.limit = limit;
+            return {
+                offset: (page - 1) * limit,
+                limit: limit
+            };
         };
         /**
          * 根据分页条件和查询结果构建分页信息
@@ -59,15 +72,17 @@ const present = (params) => {
          * @param {*} info 查询条件中的limit和page
          */
         res.paging = (result, query) => {
+            let rows = result ? result.rows : [];
+            let total = result ? result.count : 0;
             let r = {
                 status: true,
-                result: result.rows,
+                result: rows,
                 paging: {
                     page: query.page,
-                    pages: 1,
+                    pages: Math.ceil(total / query.limit),
                     limit: query.limit,
-                    count: result.rows.length,
-                    total: result.count
+                    count: rows.length,
+                    total: total
                 }
             };
             r.paging.pages = Math.ceil(r.paging.total / r.paging.limit);
@@ -78,27 +93,38 @@ const present = (params) => {
          * @param {object} result 
          */
         res.return = (result, params) => {
-            let b = result === null ? true : false;
-            let t = {
-                status: b ? false : true,
-                result: b ? null : result
-            };
-            for (let k in params) {
-                t[k] = params[k];
+            if (result && result.get) {
+                result = result.get({ plain: true });
             }
-            return res.json(t);
+            return res.json(_.assign(
+                {
+                    status: result === null ? false : true
+                }, {
+                    result: result
+                }, params));
         };
         /**
          * 处理自定义返回错误
          */
-        res.errors = (err) => {
-            const errorObj = require(path.join(d.errDir, err.fileName))[err.type];
-            return res.status(errorObj.statusCode).json({
-                status: false,
-                code: errorObj.code || 400,
-                message: errorObj.message,
-                detail: err.message
-            });
+        res.customError = (err) => {
+            try {
+                const errorObj = require(path.join(d.customDir, res.locale || d.defaultLang, err.fileName))[err.type];
+                return res.status(errorObj.statusCode).json({
+                    status: false,
+                    code: errorObj.code || 400,
+                    message: errorObj.message,
+                    detail: err.message
+                });
+            } catch (err) {
+                res.json({ status: false, message: 'errors json file not found!\n' + err.message });
+            }
+
+        };
+        /**
+         * 处理验证错误
+         */
+        res.validateError = (data) => {
+            //TODO:
         };
         next();
     };

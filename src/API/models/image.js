@@ -1,5 +1,5 @@
 module.exports = function (sequelize, TYPE) {
-    const model = sequelize.define('images',
+    const model = sequelize.define('Image',
         {
             id: {
                 type: TYPE.BIGINT,
@@ -46,6 +46,7 @@ module.exports = function (sequelize, TYPE) {
                 // }
             ],
             freezeTableName: true,
+            tableName: 'images',
             unique: true,
             initialAutoIncrement: 1000000,
             getterMethods: {},
@@ -89,6 +90,18 @@ module.exports = function (sequelize, TYPE) {
         //     foreignKey: 'id',
         //     targetKey: 'bookId',
         // });
+    };
+    model.initialize = function () {
+        const data = [
+            {
+                filename: 'test.png',
+                path: 'upload/images/',
+                size: 123456,
+                md5: '100c2c9d9937d117b8e398a1ecd852222017c2d6',
+                time: Date.now()
+            }
+        ];
+        return model.bulkCreate(data, { return: true });
     };
     return model;
 };

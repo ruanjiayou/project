@@ -2,6 +2,7 @@ const express = require('express');
 const Server = express();
 const path = require('path');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const router = require('./router');
 const ejs = require('ejs');
@@ -9,7 +10,7 @@ const cfgs = require('./configs/');
 const libs = require('./libs/');
 
 // 1.设置express模板引擎
-Server.set('views', path.join(__dirname, 'template', 'views'));
+Server.set('views', path.join(__dirname, 'templates', 'views'));
 Server.set('view engine', 'html');
 Server.engine('.html', ejs.__express);
 ejs.delimiter = '$';
@@ -17,10 +18,13 @@ ejs.delimiter = '$';
 Server.use(helmet());
 
 // 2.静态目录
-Server.use(express.static(path.join(__dirname, './public')));
+Server.use(express.static(path.join(__dirname, '../web/public')));
 // 3.解析请求
+Server.use(cookieParser());
 Server.use(bodyParser.json());
 Server.use(bodyParser.urlencoded({ extended: false }));
+// 国际化
+Server.use(libs.i18n);
 // 文件处理中间件
 Server.use(libs.upload);
 // 自动清理文件...日
@@ -39,16 +43,23 @@ Server.use(libs.present({
     limit: 'limit',
     search: 'search',
     order: 'order',
-    errDir: path.join(__dirname, 'templates/errors')
+    defaultLang: 'zh-cn',
+    customDir: path.join(__dirname, 'templates/custom-errors'),
+    validateDir: path.join(__dirname, 'templates/validate-errors')
 }));
 // 6.路由 含token验证
 router(Server);
 // 7.error异常处理
 Server.use(function (err, req, res, next) {
     if (err instanceof HinterError) {
-        res.errors(err);
-    } else if (err) {
-        res.status(500).send({ status: 'failed', message: `${err.message}` });
+        // 自定义错误
+        res.customError(err);
+    } else if (err.validate) {
+        // 验证错误
+        res.validateError(err.validate);
+    }
+    else if (err) {
+        res.status(500).send({ status: 'false', message: `${err.message}` });
     } else {
         next();
     }
@@ -66,6 +77,6 @@ if (module.parent) {
 } else {
     // 监听端口，启动程序
     Server.listen(cfgs.site.port, '0.0.0.0', function () {
-        console.log(`图片站后台API 监听端口:${cfgs.site.port}`);
+        console.log(`图片站(API/web一体) 监听端口:${cfgs.site.port}`);
     });
 }
