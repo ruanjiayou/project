@@ -27,12 +27,7 @@ async function list(req, res, next) {
         return res.errors(err);
     }
     try {
-        const scopes = ['includeImages'];
-        //filter.group = 'User.id';
-        filter.distinct = true;
-        //filter.col = 'User.id';
-        //filter.include = [{ model: models.Image }];
-        filter.include = [];
+        const scopes = [];
         const result = await models.User.scope(scopes).findAndCountAll(filter);
         res.paging(result, req.query);
     } catch (err) {

@@ -3,8 +3,10 @@ const log4js = require('log4js');
 const debug = require('debug')('APP:LOG');
 const fs = require('fs');
 const path = require('path');
-fs.writeFileSync(path.join(__dirname, config.filename), '');
 
+if (!fs.existsSync(path.dirname(path.join(__dirname, config.filename)))) {
+    fs.mkdirSync(path.dirname(path.join(__dirname, config.filename)));
+}
 // 配置日志
 log4js.configure({
     appenders: { info: { type: config.type, filename: path.join(__dirname, config.filename) } },
