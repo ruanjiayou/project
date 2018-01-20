@@ -14,10 +14,12 @@ async function create() {
             //MYISAM 不支持外键
             await models[k].associate(models);
         }
-        if (typeof models[k].initialize === 'function') {
-            await models[k].initialize();
-        }
+        // if (typeof models[k].initialize === 'function') {
+        //     await models[k].initialize();
+        // }
     };
+    await models.User.initialize();
+    await models.Image.initialize();
 }
 create().then(function () {
     console.log('数据库表已全部创建成功!');

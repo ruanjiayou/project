@@ -92,7 +92,13 @@ module.exports = function (sequelize, TYPE) {
             setterMethods: {},
             defaultScope: {},
             scopes: {
-
+                includeImages: {
+                    include: [
+                        {
+                            model: sequelize.models.Image
+                        }
+                    ]
+                }
             },
         });
     // 类级方法
@@ -111,7 +117,10 @@ module.exports = function (sequelize, TYPE) {
         //     }
         // });
         //model.hasMany(models.Comment);
-        //model.hasMany(models.Book);
+        model.hasMany(models.Image, {
+            foreignKey: 'uid',
+            targetKey: 'id'
+        });
     };
     model.initialize = function () {
         const data = [

@@ -72,7 +72,7 @@ const present = (params) => {
          * @param {*} info 查询条件中的limit和page
          */
         res.paging = (result, query) => {
-            let rows = result ? result.rows : [];
+            let rows = result ? result.rows.map(function (item) { return item.get({ plain: true }); }) : [];
             let total = result ? result.count : 0;
             let r = {
                 status: true,

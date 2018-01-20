@@ -43,6 +43,7 @@ async function create(req, res, next) {
         rules: {
             filename: 'required|string|min:1',
             path: 'required|string',
+            uid: 'required|int',
             size: 'required|int|min:0',
             md5: 'required|string|length:32',
             time: 'required|date'

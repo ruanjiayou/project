@@ -17,6 +17,7 @@ module.exports = function (app) {
     app.post('/auth/user/reset-password', userAuthRoute.resetPassword);
     app.post('/auth/user/change-password', userAuthRoute.forgotPassword);
 
+    app.get('/users', userRoute.list);
     app.get('/user/self', userRoute.show);
 
     app.get('/images', publicImageRoute.list);

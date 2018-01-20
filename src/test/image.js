@@ -61,6 +61,7 @@ describe('mocha:image', function () {
             .send({
                 filename: 'test.png',
                 path: 'upload/images/',
+                uid: 1,
                 size: 123,
                 md5: '100c2c9d9937d117b8e398a1ecd852222017c2d6',
                 time: Date.now()

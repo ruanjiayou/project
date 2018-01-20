@@ -7,7 +7,7 @@ const Validator = require('utils2/lib/validator');
 
 async function list(req, res, next) {
     debug('enter user list method!');
-    req.paging();
+    const filter = req.paging();
 
     const validator = new Validator({
         rules: {
@@ -27,8 +27,12 @@ async function list(req, res, next) {
         return res.errors(err);
     }
     try {
-        const filter = {};
-        const scopes = [];
+        const scopes = ['includeImages'];
+        //filter.group = 'User.id';
+        filter.distinct = true;
+        //filter.col = 'User.id';
+        //filter.include = [{ model: models.Image }];
+        filter.include = [];
         const result = await models.User.scope(scopes).findAndCountAll(filter);
         res.paging(result, req.query);
     } catch (err) {

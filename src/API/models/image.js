@@ -6,6 +6,10 @@ module.exports = function (sequelize, TYPE) {
                 autoIncrement: true,
                 primaryKey: true
             },
+            uid: {
+                type: TYPE.BIGINT,
+                allowNull: false
+            },
             filename: {
                 type: TYPE.STRING,
                 allowNull: false,
@@ -75,10 +79,10 @@ module.exports = function (sequelize, TYPE) {
     // 实例方法
 
     model.associate = function (models) {
-        // model.belongsTo(models.User, {
-        //     foreignKey: 'authorId',
-        //     targetKey: 'id'
-        // });
+        model.belongsTo(models.User, {
+            foreignKey: 'uid',
+            targetKey: 'id'
+        });
         // model.belongsTo(models.Catalog, {
         //     foreignKey: 'id',
         //     otherKey: 'bookId',
@@ -94,9 +98,18 @@ module.exports = function (sequelize, TYPE) {
     model.initialize = function () {
         const data = [
             {
-                filename: 'test.png',
+                filename: 'test1.png',
                 path: 'upload/images/',
                 size: 123456,
+                uid: 1,
+                md5: '100c2c9d9937d117b8e398a1ecd852222017c2d6',
+                time: Date.now()
+            },
+            {
+                filename: 'test2.png',
+                path: 'upload/images/',
+                size: 123457,
+                uid: 1,
                 md5: '100c2c9d9937d117b8e398a1ecd852222017c2d6',
                 time: Date.now()
             }

@@ -66,4 +66,17 @@ describe('mocha:user', function () {
                 done();
             });
     });
+    it('users(测试findAndCountAll())', function (done) {
+        shttp
+            .get(`${url_prefix}/users`)
+            .end()
+            .then(function (res) {
+                console.log(JSON.stringify(res));
+                done();
+            })
+            .catch(function (err) {
+                console.log(err.message);
+                done();
+            });
+    });
 });
