@@ -10,8 +10,8 @@ module.exports = {
     //数据库方言
     dialect: 'mysql',
     //数据库名
-    //database: 'project_template',
-    database: 'images',
+    database: 'project_template',
+    //database: 'images',
     session: {
         secret: 'session_cookie_name',
         key: 'session_cookie_secret',

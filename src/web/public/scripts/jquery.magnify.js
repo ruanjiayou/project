@@ -601,7 +601,7 @@ Magnify.prototype = {
         ratio = Math.max(ratio, this.options.minRatio);
         // max image size
         ratio = Math.min(ratio, this.options.maxRatio);
-
+        
         this.zoomTo(ratio, origin, e);
 
     },
@@ -882,7 +882,7 @@ Magnify.prototype = {
             self.keydown(e);
         });
 
-        $W.on('resize', self.resize());
+        //$W.on('resize', self.resize());
 
     }
 

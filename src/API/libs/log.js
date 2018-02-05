@@ -1,4 +1,4 @@
-const config = require('../configs/').log;
+const config = global.$cfgs.log;
 const log4js = require('log4js');
 const debug = require('debug')('APP:LOG');
 const fs = require('fs');

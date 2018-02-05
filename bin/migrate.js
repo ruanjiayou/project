@@ -4,7 +4,7 @@
  * @time 2017-12-3 19:04:19
  */
 // 1.加载model
-const models = require('../src/API/models');
+const models = require('../src/API/models/loader');
 
 async function create() {
     await models.sequelize.sync({ force: true });
@@ -14,10 +14,8 @@ async function create() {
             //MYISAM 不支持外键
             await models[k].associate(models);
         }
-        // if (typeof models[k].initialize === 'function') {
-        //     await models[k].initialize();
-        // }
     };
+    // 因为有顺序要求
     await models.User.initialize();
     await models.Image.initialize();
 }

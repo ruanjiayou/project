@@ -1,2 +1,4 @@
 src/.tmp/
 src/API/logs/*
+src/API/services/
+src/API/controller/

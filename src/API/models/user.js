@@ -1,5 +1,5 @@
 // libs
-const authHelper = require('../libs/').auth;
+const authHelper = global.$libs.auth;
 
 module.exports = function (sequelize, TYPE) {
     const model = sequelize.define('User',
@@ -117,10 +117,10 @@ module.exports = function (sequelize, TYPE) {
         //     }
         // });
         //model.hasMany(models.Comment);
-        model.hasMany(models.Image, {
-            foreignKey: 'uid',
-            targetKey: 'id'
-        });
+        // model.hasMany(models.Image, {
+        //     foreignKey: 'uid',
+        //     targetKey: 'id'
+        // });
     };
     model.initialize = function () {
         const data = [

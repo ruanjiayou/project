@@ -1,5 +1,5 @@
 const multer = require('multer');
-const config = require('../configs/').upload;
+const config = global.$cfgs.upload;
 const path = require('path');
 
 // 上传路径处理 ,上传文件重命名

@@ -32,3 +32,11 @@
 - ---- public 所有静态文件目录
 - ---- templates 所有模板(主要是views的)
 - ---- app.js 应用服务器
+
+## 重要说明
+```
+参考egg.js框架,app开始前就加载configs/libs/models/BLLs等作为global的变量.
+包含route全都实现自动加载功能.(loader.js中实现)
+2018-2-5 14:57:49
+controller和service先不加
+```

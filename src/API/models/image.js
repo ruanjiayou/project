@@ -6,10 +6,10 @@ module.exports = function (sequelize, TYPE) {
                 autoIncrement: true,
                 primaryKey: true
             },
-            uid: {
-                type: TYPE.BIGINT,
-                allowNull: false
-            },
+            // uid: {
+            //     type: TYPE.BIGINT,
+            //     allowNull: false
+            // },
             filename: {
                 type: TYPE.STRING,
                 allowNull: false,
@@ -79,10 +79,10 @@ module.exports = function (sequelize, TYPE) {
     // 实例方法
 
     model.associate = function (models) {
-        model.belongsTo(models.User, {
-            foreignKey: 'uid',
-            targetKey: 'id'
-        });
+        // model.belongsTo(models.User, {
+        //     foreignKey: 'uid',
+        //     targetKey: 'id'
+        // });
         // model.belongsTo(models.Catalog, {
         //     foreignKey: 'id',
         //     otherKey: 'bookId',

@@ -1,5 +1,5 @@
 // models
-const models = require('../models/');
+const models = global.$models;
 // libs
 const _ = require('utils2/lib/_');
 const debug = require('debug')('APP:BLL_USER');

@@ -3,8 +3,8 @@ const path = require('path');
 const baseName = path.basename(module.filename);
 const basePath = __dirname;
 const Sequelize = require('sequelize');
-const cfg = require('../configs/').database;
-const logger = require('../libs/').log;
+const cfg = require('../configs/loader').database;
+const logger = require('../libs/loader').log;
 const models = {};
 
 const DB = new Sequelize(

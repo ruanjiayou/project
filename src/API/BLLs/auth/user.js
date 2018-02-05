@@ -1,9 +1,9 @@
 // model
-const models = require('../../models');
+const models = global.$models;
 
 // libs
 const Validator = require('utils2/lib/validator');
-const authHelper = require('../../libs/').auth;
+const authHelper = global.$libs.auth;
 const debug = require('debug')('APP:auth_user');
 /**
  * @api {get} /auth/user/login 进行sha1加盐加密 再与数据库的做对比

@@ -1,3 +1,9 @@
+// 0.全局变量设置
+global.$cfgs = require('./configs/loader');
+global.$libs = require('./libs/loader');
+global.$models = require('./models/loader');
+global.$BLLs = require('./BLLs/loader');
+
 const express = require('express');
 const Server = express();
 const path = require('path');
@@ -6,8 +12,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const router = require('./router');
 const ejs = require('ejs');
-const cfgs = require('./configs/');
-const libs = require('./libs/');
+const cfgs = global.$cfgs;
+const libs = global.$libs;
 
 // 1.设置express模板引擎
 Server.set('views', path.join(__dirname, 'templates', 'views'));
@@ -19,6 +25,7 @@ Server.use(helmet());
 
 // 2.静态目录
 Server.use(express.static(path.join(__dirname, '../web/public')));
+Server.use(express.static('d:/website/blog.php/'));
 // 3.解析请求
 Server.use(cookieParser());
 Server.use(bodyParser.json());
@@ -29,8 +36,6 @@ Server.use(libs.i18n);
 Server.use(libs.upload);
 // 自动清理文件...日
 //Server.use(multerAutoReap);
-// 4.session验证
-//auth(Server);
 // 4.全局变量
 Server.use(function (req, res, next) {
     res.locals.sys = cfgs.site.sys;
@@ -49,6 +54,7 @@ Server.use(libs.present({
 }));
 // 6.路由 含token验证
 router(Server);
+
 // 7.error异常处理
 Server.use(function (err, req, res, next) {
     if (err instanceof HinterError) {
@@ -66,6 +72,9 @@ Server.use(function (err, req, res, next) {
 });
 // 8.404
 Server.use(function (req, res) {
+    //console.log(req.method);
+    //console.log(req.originalUrl.length);
+    //console.log(req.originalUrl);
     if (!res.headersSent) {
         res.status(404).render('404');
     }

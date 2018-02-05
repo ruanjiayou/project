@@ -32,7 +32,7 @@ module.exports = function (app) {
 // lib
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const authConfig = require('../configs/').auth;
+const authConfig = global.$cfgs.auth;
 
 /**
  * 采用sha1 + salt
