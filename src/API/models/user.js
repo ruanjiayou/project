@@ -128,6 +128,7 @@ module.exports = function (sequelize, TYPE) {
                 id: 1,
                 email: '1439120442@qq.com',
                 name: '阮家友',
+                birth: '1993-01-14',
                 status: 'using',
                 password: '100c2c9d9937d117b8e398a1ecd852222017c2d6'
             }

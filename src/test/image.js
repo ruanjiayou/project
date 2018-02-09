@@ -1,61 +1,55 @@
 const shttp = require('net-helper').shttp;
 const assert = require('assert');
-const config = require('../API/configs/').site;
+const config = require('../API/configs/loader').site;
 const url_prefix = `http://localhost:${config.port}`;
 let authorization = '', new_id;
 
 describe('mocha:image', function () {
 
-    it('list()', function (done) {
-        shttp
+    it('list()', async function () {
+        await shttp
             .get(`${url_prefix}/images`)
             .type('json')
-            .end()
-            .then(function (res) {
-                console.log(res, '***success***');
-                assert.equal(res.status, true);
-                done();
-            })
-            .catch(function (err) {
-                console.log((err), '**fail***');
-                done();
+            .end(function (err, res) {
+                if (err) {
+                    console.log(err.message);
+                } else {
+                    console.log(res, '***success***');
+                    assert.equal(res.status, true);
+                }
+
             });
     });
-    it('show()', function (done) {
-        shttp
+    it('show()', async function () {
+        await shttp
             .get(`${url_prefix}/images/1000000`)
-            .end()
-            .then(function (res) {
+            .end(function (err, res) {
+                if (err) {
+                    console.log(err.message);
+                }
                 assert.equal(res.status, true);
                 console.log(res, '***success***');
-                done();
-            })
-            .catch(function (err) {
-                console.log(Object.keys(err), '**fail***');
-                done();
             });
     });
-    it('update()', function (done) {
-        shttp
+    it('update()', async function () {
+        await shttp
             .put(`${url_prefix}/images/1000000`)
             .send({
                 time: Date.now()
             })
-            .end()
-            .then(function (res) {
-                assert.equal(res.status, true);
-                console.log(res, '***success***');
-                done();
-            })
-            .catch(function (err) {
-                console.log(Object.keys(err), '**fail***');
-                console.log(err.response.body);
-                done();
+            .end(function (err, res) {
+                if (err) {
+                    console.log(err.message);
+                } else {
+                    assert.equal(res.status, true);
+                    console.log(res, '***success***');
+                }
+
             });
     });
 
-    it('create()', function (done) {
-        shttp
+    it('create()', async function () {
+        await shttp
             .post(`${url_prefix}/images`)
             .type('json')
             .send({
@@ -66,30 +60,28 @@ describe('mocha:image', function () {
                 md5: '100c2c9d9937d117b8e398a1ecd852222017c2d6',
                 time: Date.now()
             })
-            .end()
-            .then(function (res) {
-                console.log(res, '***success***');
-                //assert.equal(res.status, true);
-                new_id = res.result.id;
-                done();
-            })
-            .catch(function (err) {
-                console.log(err, '**fail***');
-                done();
+            .end(function (err, res) {
+                if (err) {
+                    console.log(err.message);
+                } else {
+                    console.log(res, '***success***');
+                    //assert.equal(res.status, true);
+                    new_id = res.result.id;
+                }
+
             });
     });
-    it('destroy()', function (done) {
-        shttp
+    it('destroy()', async function () {
+        await shttp
             .delete(`${url_prefix}/images/${new_id}`)
-            .end()
-            .then(function (res) {
-                assert.equal(res.status, true);
-                console.log(res, '***success***');
-                done();
-            })
-            .catch(function (err) {
-                console.log(Object.keys(err.response), '**fail***');
-                done();
+            .end(function (err, res) {
+                if (err) {
+                    console.log(err.message);
+                } else {
+                    assert.equal(res.status, true);
+                    console.log(res, '***success***');
+                }
+
             });
     });
 });

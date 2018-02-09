@@ -3,8 +3,11 @@
  * @description 刷新数据库
  * @time 2017-12-3 19:04:19
  */
+global.$cfgs = require('../src/API/configs/loader');
+global.$libs = require('../src/API/libs/loader');
+global.$models = require('../src/API/models/loader');
 // 1.加载model
-const models = require('../src/API/models/loader');
+const models = global.$models;
 
 async function create() {
     await models.sequelize.sync({ force: true });
