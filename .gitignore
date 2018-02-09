@@ -2,3 +2,4 @@ src/.tmp/
 src/API/logs/*
 src/API/services/
 src/API/controller/
+node_modules/

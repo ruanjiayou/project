@@ -4,7 +4,7 @@ module.exports = {
     //数据库登录密码
     password: '',
     //数据库url地址
-    host: 'localhost',
+    host: '127.0.0.1',
     //数据库url端口
     port: '3306',
     //数据库方言
