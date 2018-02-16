@@ -98,6 +98,7 @@
         "path-to-regexp": "^2.1.0",
         "redis": "^2.8.0",
         "request-promise": "^4.2.2",
+        "socket.io": "^2.0.4",
         "ueditor-backend": "^1.0.15",
         "uri-parser-helper": "https://github.com/ruanjiayou/URI.git",
         "utils2": "https://github.com/ruanjiayou/utils.git"
