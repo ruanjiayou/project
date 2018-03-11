@@ -1,9 +1,3 @@
-// 0.全局变量设置
-global.$cfgs = require('./configs/loader');
-global.$libs = require('./libs/loader');
-global.$models = require('./models/loader');
-global.$BLLs = require('./BLLs/loader');
-
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
@@ -13,11 +7,16 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const router = require('./router');
 const ejs = require('ejs');
+
+// 0.全局变量设置
+global.$cfgs = require('./configs/loader');
+global.$libs = require('./libs/loader');
+global.$models = require('./models/loader');
+global.$BLLs = require('./BLLs/loader');
+global.$ws = require('../ws/websocket')(server);
+
 const cfgs = global.$cfgs;
 const libs = global.$libs;
-
-// ws消息
-require('../ws/websocket')(server);
 
 // 1.设置express模板引擎
 app.set('views', path.join(__dirname, 'templates', 'views'));
@@ -90,6 +89,6 @@ if (module.parent) {
 } else {
     // 监听端口，启动程序
     server.listen(cfgs.site.port, '0.0.0.0', function () {
-        console.log(`图片站(API/web一体) 监听端口:${cfgs.site.port}`);
+        console.log(`图片站(API/web一体+ws) 监听端口:${cfgs.site.port}`);
     });
 }

@@ -16,10 +16,9 @@ describe('mocha:user', function () {
                 //status: activing
                 //gender: m
                 //isApproved: false
-
             })
-            .end(function(err, res){
-                if(err){
+            .end(function (err, res) {
+                if (err) {
                     console.log(err.message);
                 } else {
                     console.log(res);
@@ -34,8 +33,8 @@ describe('mocha:user', function () {
                 // 123456 -> md5
                 password: 'e10adc3949ba59abbe56e057f20f883e'
             })
-            .end(function(err, res){
-                if(err){
+            .end(function (err, res) {
+                if (err) {
                     console.log(err.message);
                 } else {
                     console.log(res);
@@ -43,14 +42,14 @@ describe('mocha:user', function () {
                 }
             });
     });
-    it('users/self(测试auth)', async function() {
+    it('users/self(测试auth)', async function () {
         await shttp
             .get(`${url_prefix}/users/self`)
             .set({
                 authorization: authorization
             })
-            .end(function(err, res){
-                if(err){
+            .end(function (err, res) {
+                if (err) {
                     console.log(err.message);
                 } else {
                     console.log(res);
@@ -62,8 +61,8 @@ describe('mocha:user', function () {
     it('users(测试findAndCountAll())', async function () {
         await shttp
             .get(`${url_prefix}/users`)
-            .end(function(err, res){
-                if(err){
+            .end(function (err, res) {
+                if (err) {
                     console.log(err.message);
                 } else {
                     console.log(res);

@@ -48,7 +48,7 @@
         var box = document.getElementById('box');
         var items = box.children;
         // 定义每一列之间的间隙 为10像素
-        var gap = 10, page = 3, loading = false;
+        var gap = 10, page = 1, loading = false;
 
         window.onload = function () {
             $('[data-magnify=gallery]').magnify();
@@ -80,7 +80,7 @@
                     error: function (err) {
 
                     },
-                    complete: function(){
+                    complete: function () {
                         loading = false;
                     }
                 });

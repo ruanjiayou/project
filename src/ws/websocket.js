@@ -1,5 +1,6 @@
 const wsio = require('socket.io');
 const debug = require('debug')('APP:ws');
+
 module.exports = function (server) {
     const io = wsio(server);
     // 设置日志级别
@@ -59,6 +60,14 @@ module.exports = function (server) {
             debug(`${client.name} Disconnect`);
         });
     });
+    return function (txt) {
+        io.sockets.emit('message', {
+            type: 'notify',
+            author: 'System',
+            text: txt,
+            time: getTime()
+        });
+    };
 };
 
 function getTime() {
