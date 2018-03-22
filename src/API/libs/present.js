@@ -6,20 +6,7 @@
  */
 const _ = require('lodash');
 const path = require('path');
-
-/**
- * 全局自定义错误类型
- */
-global.HinterError = function (fileName, type, detail) {
-    this.fileName = fileName;
-    this.type = type;
-    this.time = new Date().getTime();
-    if (detail) {
-        this.message = detail;
-    }
-    return this;
-};
-global.HinterError.propotype = new Error();
+const errorsJson = require('../templates/custom-errors/loader');
 
 const present = (params) => {
     // 默认设置 分页传参字段/错误提示文件夹
@@ -99,15 +86,28 @@ const present = (params) => {
          */
         res.customError = (err) => {
             try {
-                const errorObj = require(path.join(d.customDir, res.locale || d.defaultLang, err.fileName))[err.type];
-                return res.status(errorObj.statusCode).json({
-                    status: false,
-                    code: errorObj.code || 400,
-                    message: errorObj.message,
-                    detail: err.message
-                });
-            } catch (err) {
-                res.json({ status: false, message: 'errors json file not found!\n' + err.message });
+                // 语言包验证-模块验证 ['zh-cn']['common']['notFound]
+                const langJson = errorsJson[res.locale || d.defaultLang];
+                let errorModule = null;
+                let errorJson = null;
+                if (langJson) {
+                    errorModule = langJson[err.module];
+                    if (errorModule) {
+                        errorJson = errorModule[err.type];
+                    }
+                }
+                if (errorJson) {
+                    return res.status(errorJson.statusCode).json({
+                        status: false,
+                        code: errorJson.code || 200,
+                        message: errorJson.message,
+                        detail: err.message
+                    });
+                } else {
+                    throw err;
+                }
+            } catch (er) {
+                res.json({ status: false, code: 200, message: '没找到定义的错误json文件!', detail: er });
             }
 
         };
@@ -115,7 +115,7 @@ const present = (params) => {
          * 处理验证错误
          */
         res.validateError = (data) => {
-            //TODO:
+            res.json({ status: false, message: data });
         };
         next();
     };

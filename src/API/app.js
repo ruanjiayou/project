@@ -17,6 +17,7 @@ global.$ws = require('../ws/websocket')(server);
 
 const cfgs = global.$cfgs;
 const libs = global.$libs;
+const Hinter = libs.hinter;
 
 // 1.设置express模板引擎
 app.set('views', path.join(__dirname, 'templates', 'views'));
@@ -60,7 +61,7 @@ router(app);
 
 // 7.error异常处理
 app.use(function (err, req, res, next) {
-    if (err instanceof HinterError) {
+    if (err instanceof Hinter) {
         // 自定义错误
         res.customError(err);
     } else if (err.validate) {
@@ -81,6 +82,13 @@ app.use(function (req, res) {
     if (!res.headersSent) {
         res.status(404).render('404');
     }
+});
+
+process.on("uncaughtException", (err) => {
+    console.error(err);
+});
+process.on("unhandledRejection", (reason) => {
+    console.error(reason);
 });
 
 

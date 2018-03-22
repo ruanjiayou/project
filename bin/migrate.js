@@ -12,12 +12,6 @@ const models = global.$models;
 async function create() {
     await models.sequelize.sync({ force: true });
     //await models.sequelize.sync();
-    for (let k in models) {
-        if (typeof models[k].associate === 'function') {
-            //MYISAM 不支持外键
-            await models[k].associate(models);
-        }
-    };
     // 因为有顺序要求
     await models.User.initialize();
     await models.Image.initialize();

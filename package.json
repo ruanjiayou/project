@@ -83,6 +83,10 @@
     "license": "MIT",
     "dependencies": {
         "cookie-parser": "^1.4.3",
+        "gulp-apidoc": "^0.2.7",
+        "gulp-clean": "^0.4.0",
+        "gulp-nodemon": "^2.2.1",
+        "gulp-shell": "^0.6.5",
         "helmet": "^3.9.0",
         "html-parser2": "https://github.com/ruanjiayou/html-parser.git",
         "http-proxy": "^1.16.2",
@@ -92,15 +96,12 @@
         "log4js": "^2.4.1",
         "moment": "^2.20.1",
         "multer": "^1.3.0",
-        "net-helper": "https://github.com/ruanjiayou/net.git",
         "nodemailer": "^4.4.1",
         "nodemailer-smtp-transport": "^2.7.4",
         "path-to-regexp": "^2.1.0",
         "redis": "^2.8.0",
         "request-promise": "^4.2.2",
         "socket.io": "^2.0.4",
-        "ueditor-backend": "^1.0.15",
-        "uri-parser-helper": "https://github.com/ruanjiayou/URI.git",
-        "utils2": "https://github.com/ruanjiayou/utils.git"
+        "ueditor-backend": "^1.0.15"
     }
 }
