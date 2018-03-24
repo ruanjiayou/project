@@ -51,7 +51,7 @@ const present = (params) => {
          */
         res.paging = (result, query) => {
             let rows = [], total = 0;
-            if (result && result.rows && result.count) {
+            if (result && !_.isNil(result.rows) && !_.isNil(result.count)) {
                 rows = result ? result.rows.map(function (item) { return item.get({ plain: true }); }) : [];
                 total = result ? result.count : 0;
             } else if (result) {
