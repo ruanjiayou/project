@@ -44,8 +44,6 @@ const messages = {
   }
 };
 class Validator {
-  public rules: any;
-  public messages: any;
   constructor(o, lang) {
     this.rules = {};
     this.messages = {};
@@ -59,7 +57,7 @@ class Validator {
     this.parse();
   }
   error(data) {
-    let err: any = new Error();
+    let err = new Error();
     err.validate = data;
     throw err;
   }
@@ -91,7 +89,7 @@ class Validator {
    * @param {sting[]} arr
    */
   _arr2rule(arr) {
-    let rule: any = {
+    let rule = {
       range: { min: -Infinity, max: Infinity, includeBottom: true, includeTop: true },
       length: { min: 0, max: 255 }
     };
@@ -401,11 +399,11 @@ class Validator {
       jishu_child2.push(parseInt(arrJiShu2[h]) / 10);
     }
 
-    var sumJiShu: any = 0; //奇数位*2 < 9 的数组之和
-    var sumOuShu: any = 0; //偶数位数组之和
-    var sumJiShuChild1: any = 0; //奇数位*2 >9 的分割之后的数组个位数之和
-    var sumJiShuChild2: any = 0; //奇数位*2 >9 的分割之后的数组十位数之和
-    var sumTotal: any = 0;
+    var sumJiShu = 0; //奇数位*2 < 9 的数组之和
+    var sumOuShu = 0; //偶数位数组之和
+    var sumJiShuChild1 = 0; //奇数位*2 >9 的分割之后的数组个位数之和
+    var sumJiShuChild2 = 0; //奇数位*2 >9 的分割之后的数组十位数之和
+    var sumTotal = 0;
     for (var m = 0; m < arrJiShu.length; m++) {
       sumJiShu = sumJiShu + parseInt(arrJiShu[m]);
     }

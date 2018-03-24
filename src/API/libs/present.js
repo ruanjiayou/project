@@ -50,8 +50,14 @@ const present = (params) => {
          * @param {*} info 查询条件中的limit和page
          */
         res.paging = (result, query) => {
-            let rows = result ? result.rows.map(function (item) { return item.get({ plain: true }); }) : [];
-            let total = result ? result.count : 0;
+            let rows = [], total = 0;
+            if (result && result.rows && result.count) {
+                rows = result ? result.rows.map(function (item) { return item.get({ plain: true }); }) : [];
+                total = result ? result.count : 0;
+            } else if (result) {
+                rows = result;
+                total = result.length;
+            }
             let r = {
                 status: true,
                 result: rows,
@@ -115,7 +121,7 @@ const present = (params) => {
          * 处理验证错误
          */
         res.validateError = (data) => {
-            res.json({ status: false, message: data });
+            res.json({ status: false, code: 200, message: data });
         };
         next();
     };
