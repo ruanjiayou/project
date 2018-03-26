@@ -3,7 +3,7 @@ const path = require('path');
 const baseName = path.basename(module.filename);
 const basePath = __dirname;
 const Sequelize = require('sequelize');
-const cfg = require('../configs/loader').database;
+const cfg = require('../configs/loader').database[process.env.NODE_ENV];
 const logger = require('../libs/loader').log;
 const models = {};
 

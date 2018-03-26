@@ -21,8 +21,8 @@
  * 
  * requiredif:field|int?
  */
-import * as _ from 'lodash';
-import * as moment from 'moment';
+const _ = require('lodash');
+const moment = require('moment');
 
 const messages = {
   'zh-ch': {

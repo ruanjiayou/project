@@ -5,5 +5,5 @@ module.exports = {
   "test": {
     "debug": "APP:*"
   },
-  "product": {}
+  "production": {}
 }

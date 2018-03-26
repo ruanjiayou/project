@@ -13,7 +13,7 @@ global.$cfgs = require('./configs/loader');
 global.$libs = require('./libs/loader');
 global.$models = require('./models/loader');
 global.$BLLs = require('./BLLs/loader');
-global.$ws = require('../ws/websocket')(server);
+//global.$ws = require('../ws/websocket')(server);
 
 const cfgs = global.$cfgs;
 const libs = global.$libs;
@@ -97,6 +97,6 @@ if (module.parent) {
 } else {
     // 监听端口，启动程序
     server.listen(cfgs.site.port, '0.0.0.0', function () {
-        console.log(`图片站(API/web一体+ws) 监听端口:${cfgs.site.port}`);
+        console.log(`图片站(API/web一体+ws) 监听端口:${cfgs.site.port} 环境:${process.env.NODE_ENV}`);
     });
 }

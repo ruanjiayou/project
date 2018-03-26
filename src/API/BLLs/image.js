@@ -4,8 +4,8 @@
 const models = global.$models;
 
 // lib
-const _ = require('utils2/lib/_');
-const Validator = require('utils2/lib/validator');
+const _ = require('lodash');
+const Validator = global.$libs.validator;
 const debug = require('debug')('APP:BLL_image');
 
 async function findOrCreate(req, res, next) {

@@ -1,9 +1,9 @@
 // models
 const models = global.$models;
 // libs
-const _ = require('utils2/lib/_');
+const _ = require('lodash');
 const debug = require('debug')('APP:BLL_USER');
-const Validator = require('utils2/lib/validator');
+const Validator = global.$libs.validator;
 
 async function list(req, res, next) {
     debug('enter user list method!');

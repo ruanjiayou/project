@@ -2,7 +2,7 @@
 const models = global.$models;
 
 // libs
-const Validator = require('utils2/lib/validator');
+const Validator = global.$libs.validator;
 const authHelper = global.$libs.auth;
 const debug = require('debug')('APP:auth_user');
 /**

@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+const extension = '.js';
 
 /**
  * 扫描父文件夹下的所有语言版本的错误提示json
