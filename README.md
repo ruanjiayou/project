@@ -1,3 +1,4 @@
+# minivictory移动端界面
 # 工程模板(使用步骤说明)
 - git clone https://github.com/ruanjiayou/project.git
 - 安装数据库(如mysql)

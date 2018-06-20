@@ -3,7 +3,7 @@ const Server = express();
 const path = require('path');
 const ejs = require('ejs');
 // 1.设置express模板引擎
-Server.set('views', path.join(__dirname, 'templates', 'views'));
+Server.set('views', path.join(__dirname, '../API/templates', 'views'));
 Server.set('view engine', 'html');
 Server.engine('.html', ejs.__express);
 ejs.delimiter = '$';
@@ -22,7 +22,7 @@ if (module.parent) {
     module.exports = Server;
 } else {
     // 监听端口，启动程序
-    Server.listen(8097, '0.0.0.0', function () {
-        console.log('图片站web端 监听端口:8097');
+    Server.listen(9002, '0.0.0.0', function () {
+        console.log('移动端 mobile.minivictory.com 监听端口:9002');
     });
 }
