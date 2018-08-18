@@ -1,7 +1,0 @@
-{
-    "validate": {
-        "code": 10300,
-        "statusCode": 200,
-        "message": "validate error!"
-    }
-}

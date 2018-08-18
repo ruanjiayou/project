@@ -13,7 +13,7 @@
         "NODE_ENV": "dev",
         "port": "3000"
       },
-      "program": "${workspaceFolder}/src/API/app.js"
+      "program": "${workspaceFolder}/launch.js"
     }
   ]
 }
