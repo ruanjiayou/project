@@ -4,12 +4,13 @@ const path = require('path');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const ejs = require('ejs');
 
 // .设置express模板引擎
-// app.set('views', path.join(__dirname, 'templates', 'views'));
-// app.set('view engine', 'html');
-// app.engine('.html', ejs.__express);
-// ejs.delimiter = '$';
+app.set('views', VIEW_PATH);
+app.set('view engine', 'html');
+app.engine('.html', ejs.__express);
+ejs.delimiter = '$';
 
 // .安全部分
 app.use(helmet());
@@ -53,12 +54,13 @@ require('./router')(app);
 // .error异常处理
 const Hinter = require(LIB_PATH + 'Hinter');
 app.use(function (err, req, res, next) {
+  console.log(err);
   if (err instanceof Hinter) {
     // 自定义错误
-    res.customError(err);
+    res.error(err);
   } else if (err.validate) {
-    // 验证错误
-    res.validateError(err.validate);
+    // // 验证错误
+    // res.validateError(err.validate);
   }
   else if (err) {
     const result = {};
@@ -72,11 +74,15 @@ app.use(function (err, req, res, next) {
 
 // .404路由
 app.use(function (req, res) {
-  //console.log(req.method);
-  //console.log(req.originalUrl.length);
-  //console.log(req.originalUrl);
+  // console.log(req.method);
+  // console.log(req.originalUrl.length);
+  // console.log(req.originalUrl);
   if (!res.headersSent) {
-    res.status(404).send('API不存在!');
+    if (/^v\d+/.test(req.originalUrl)) {
+      res.status(404).send('API不存在!');
+    } else {
+      res.render('404');
+    }
   }
 });
 

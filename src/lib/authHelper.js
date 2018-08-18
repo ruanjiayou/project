@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const Hinter = require('./Hinter');
 
 const authCfg = require(CONFIG_PATH + 'auth');
 
@@ -35,12 +36,12 @@ function decode(req) {
   let token = req.headers[key] || (req.body && req.body[key]) || (req.query && req.query[key]);
   if (token) {
     try {
-      token = jwt.verify(token.split(' ')[1], authCfg.secret);
+      token = jwt.verify(token, authCfg.secret);
     } catch (err) {
-      throw new HinterError('auth', 'tokenExpired');
+      throw new Hinter('auth', 'tokenExpired');
     }
   } else {
-    throw new HinterError('auth', 'tokenNotFound');
+    throw new Hinter('auth', 'tokenNotFound');
   }
   return token;
 };

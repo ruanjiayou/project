@@ -36,12 +36,10 @@ function adjustRoutes(arr) {
   return arr;
 }
 /**
- * 加载所有路由
+ * 处理路由文件
+ * @param {object} info 路径信息
  */
-loader({
-  dir: APP_PATH + 'routes/',
-  recusive: true
-}, function (info) {
+function handler(info) {
   let route = require(info.fullpath);
   Object.keys(route).forEach(key => {
     // 转化为可以排序的对象
@@ -54,7 +52,21 @@ loader({
     };
     routes.push(o);
   });
-});
+}
+/**
+ * 加载所有路由
+ */
+loader({
+  dir: APP_PATH + 'routes/',
+  recusive: true
+}, handler);
+/**
+ * 加载所有控制器
+ */
+loader({
+  dir: APP_PATH + 'controller/',
+  recusive: true
+}, handler);
 
 module.exports = function (app) {
   // 排序

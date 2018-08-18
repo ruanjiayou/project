@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const errorsJson = require(ERROR_PATH);
 
 /**
  * 根据分页条件和查询结果构建分页信息
@@ -81,7 +82,7 @@ function reqPaging(cb) {
  * 返回对象
  */
 function returns(result, param) {
-  this.json(preReturn(result, params));
+  this.json(preReturn(result, param));
 }
 /**
  * 处理分页
@@ -105,6 +106,18 @@ function fail() {
   response[RES_STATUS] = RES_FAIL;
   this.json(response);
 }
+/**
+ * 处理错误
+ */
+function error(err) {
+  // 语言包验证-模块验证 ['zh-cn']['common']['notFound]
+  const errorJson = errorsJson[this.locale || d.defaultLang][err.module][err.type];
+  const errInfo = {};
+  errInfo[RES_STATUS] = RES_FAIL;
+  errInfo[RES_CODE] = errorJson.code || 400;
+  errInfo[RES_ERROR] = errorJson.message;
+  return this.status(errorJson.statusCode).json(errInfo);
+}
 
 module.exports = function (params) {
   return (req, res, next) => {
@@ -113,6 +126,7 @@ module.exports = function (params) {
     res.paging = resPaging;
     res.success = success;
     res.fail = fail;
+    res.error = error;
     next();
   };
 }

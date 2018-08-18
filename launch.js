@@ -1,14 +1,20 @@
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : 'dev';
 process.env.port = process.env.port ? process.env.port : '3000';
 
+global.NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'dev';
 // 项目路径
 global.ROOT_PATH = __dirname + '/';
 // 应用程序路径
-global.APP_PATH = env === 'dev' ? ROOT_PATH + 'src/' : __dirname + '/';
+global.APP_PATH = NODE_ENV === 'dev' ? ROOT_PATH + 'src/' : __dirname + '/';
 // 配置路径
 global.CONFIG_PATH = `${APP_PATH}/config/`;
 // 库文件路径
 global.LIB_PATH = `${APP_PATH}/lib/`;
+// 路由路径
+global.ROUTE_PATH = `${APP_PATH}/routes/`;
+// 错误json路径
+global.ERROR_PATH = `${APP_PATH}/errors/`;
+// 前端模板路径
+global.VIEW_PATH = `${APP_PATH}/views/`;
 // 插件路径
 global.PLUGIN_PATH = `${APP_PATH}/plugin/`;
 // 静态文件路径
