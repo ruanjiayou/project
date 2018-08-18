@@ -78,7 +78,7 @@ app.use(function (req, res) {
   // console.log(req.originalUrl.length);
   // console.log(req.originalUrl);
   if (!res.headersSent) {
-    if (/^v\d+/.test(req.originalUrl)) {
+    if (/^\/v\d+/.test(req.originalUrl)) {
       res.status(404).send('API不存在!');
     } else {
       res.render('404');

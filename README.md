@@ -6,7 +6,7 @@
 - 修改配置文件(主要是端口/数据库,数据库要手动建)
 - *写表的model
 - *封装model的基本方法(list/show/update/destroy)
-- 刷新数据库 
+- 刷新数据库: gulp migration -D -F
 - 启动app: gulp
 - 测试基本接口(mocha --recursive) 测试图片上传方法要用修改图片路径,用shttp的attach方法
 - *生成apidoc: gulp doc

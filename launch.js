@@ -18,7 +18,7 @@ global.VIEW_PATH = `${APP_PATH}/views/`;
 // 插件路径
 global.PLUGIN_PATH = `${APP_PATH}/plugin/`;
 // 静态文件路径
-global.STATIC_PATH = `${ROOT_PATH}/public/`;
+global.STATIC_PATH = `${ROOT_PATH}/static/`;
 
 // 请求字段
 global.REQ_PAGE = 'page';

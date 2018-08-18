@@ -3,10 +3,11 @@ const apidoc = require('gulp-apidoc');
 const uglify = require('gulp-uglify');
 const pump = require('pump');
 const clean = require('gulp-clean');
-//const pm2 = require('pm2');
+const pm2 = require('pm2');
 const fs = require('fs');
 const path = require('path');
 const nodemon = require('gulp-nodemon');
+const migration = require('./bin/migration');
 
 /**
  * 清空生成的dist目录
@@ -80,6 +81,10 @@ gulp.task('develop', () => {
 });
 gulp.task('publish', () => {
 
+});
+
+gulp.task('migration', () => {
+  migration(process.argv);
 });
 
 gulp.task('default', ['develop']);

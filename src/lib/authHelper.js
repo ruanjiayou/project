@@ -33,7 +33,7 @@ function encode(data) {
  */
 function decode(req) {
   let key = authCfg.key.toLocaleLowerCase();
-  let token = req.headers[key] || (req.body && req.body[key]) || (req.query && req.query[key]);
+  let token = req.headers[key] || req.cookies[key] || (req.query && req.query[key]) || (req.body && req.body[key]);
   if (token) {
     try {
       token = jwt.verify(token, authCfg.secret);
