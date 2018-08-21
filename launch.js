@@ -12,9 +12,11 @@ global.LIB_PATH = `${APP_PATH}/lib/`;
 // 路由路径
 global.ROUTE_PATH = `${APP_PATH}/routes/`;
 // 错误json路径
-global.ERROR_PATH = `${APP_PATH}/errors/`;
+global.ERROR_PATH = `${APP_PATH}/templates/errors/`;
 // 前端模板路径
-global.VIEW_PATH = `${APP_PATH}/views/`;
+global.VIEW_PATH = `${APP_PATH}/templates/views/`;
+// 邮件模板路径
+global.EMAIL_PATH = `${APP_PATH}/templates/emails/`;
 // 插件路径
 global.PLUGIN_PATH = `${APP_PATH}/plugin/`;
 // 静态文件路径
