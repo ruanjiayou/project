@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+  <meta name="Author" content="阮家友">
+  <meta name="Keywords" content="HTML,model,test">
+  <meta name="Description" content="special effect">
+  <meta name="time" content="2015-9-27 10:41:48">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>采集图片</title>
+  <link rel="stylesheet" href="<$- UI_SITE $>/css/common.notify.css" />
+  <style type="text/css">
+    html,
+    body {
+      font-size: 14px;
+      margin: 0px;
+      padding: 0px;
+      font-family: Microsoft YaHei;
+    }
+
+    li {
+      list-style: none;
+    }
+
+    img,
+    iframe {
+      border: 0px;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .clear {
+      clear: both;
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 50px;
+    }
+
+    .btn {
+      line-height: 30px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 0 10px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      border-color: #50c1f6;
+    }
+
+    #top {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+      background-color: #fff;
+      z-index: 2;
+    }
+
+    #top>div {
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    #txtUrl,
+    #txtReg {
+      width: 50%;
+      margin: 10px;
+      border: 1px solid #ccc;
+      padding: 0 5px;
+      border-radius: 4px;
+      line-height: 32px;
+    }
+
+    #ddlSite {
+      line-height: 32px;
+      display: inline-block;
+      height: 32px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #txtUrl:focus,
+    #txtReg:focus {
+      border-color: #50c1f6;
+    }
+
+    #main {
+      width: 80%;
+      margin: 180px auto 20px;
+    }
+  </style>
+  <script src="<$- UI_SITE $>/js/jquery.js"></script>
+  <script src="<$- UI_SITE $>/js/core.notify.js"></script>
+</head>
+
+<body>
+  <div id="top">
+    <div>
+      <div>
+        <input id="txtUrl" />
+        <br/>
+        <input id="txtReg" value="" />
+        <br/>
+        <button class="btn" id="btnImg" type="button">采集节点图片</button>
+        <button class="btn" id="btnReg" type="button">采集正则图片</button>
+      </div>
+    </div>
+  </div>
+  <div id="main">
+    <div id="result" class="well"></div>
+  </div>
+  <script>
+    $('#txtReg').val('src\s*=\s*[\'"](http\:\/\/image[^\'"]+?\.(jpg|png|gif))[^\'"]*?[\'"]');
+    // 显示
+    function showMain(o) {
+      var box = $('#result');
+      o = o.map(function (m) {
+        return m.replace('<', '&lt').replace('>', '&gt');
+      });
+      box.html(o.join('<br/>'));
+    }
+    //进行
+    $('#btnImg,#btnReg').click(function () {
+      var type = '';
+      if (this.id === 'btnReg') {
+        type = 'reg';
+        if (/^\s*$/.test($('#txtReg').val())) {
+          alert('reg不能为空！');
+          return;
+        }
+      }
+      if (/^\s*$/.test($('#txtUrl').val())) {
+        alert('url不能为空！');
+        return;
+      }
+      $.notify.showLoad();
+      $.post(
+        '/v1/public/utils/recognition-images',
+        { url: $('#txtUrl').val(), type: type, reg: $('#txtReg').val() },
+        function (d, status, o) {
+          $.notify.hideLoad();
+          if (d.state === 'success') {
+            showMain(d.rdata);
+          } else {
+            alert(d.stack);
+          }
+        });
+    });
+
+  </script>
+</body>
+
+</html>

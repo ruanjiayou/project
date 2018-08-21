@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+  <meta name="Author" content="阮家友">
+  <meta name="Keywords" content="HTML,model,test">
+  <meta name="Description" content="special effect">
+  <meta name="time" content="2015-9-27 10:41:48">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>查看请求头</title>
+  <link rel="stylesheet" href="<$- UI_SITE $>/css/common.css" />
+  <link rel="stylesheet" href="<$- UI_SITE $>/css/common.layout.css" />
+  <link rel="stylesheet" href="<$- UI_SITE $>/css/common.button.css" />
+  <link rel="stylesheet" href="<$- UI_SITE $>/css/common.notify.css" />
+  <style type="text/css">
+    html,
+    body {
+      font-size: 14px;
+      margin: 0px;
+      padding: 0px;
+      font-family: Microsoft YaHei;
+    }
+
+    li {
+      list-style: none;
+    }
+
+    img,
+    iframe {
+      border: 0px;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .clear {
+      clear: both;
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 50px;
+    }
+
+    .btn {
+      line-height: 30px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 0 10px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      border-color: #50c1f6;
+    }
+
+    #top {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+      background-color: #FFF;
+      z-index: 2;
+    }
+
+    #top>div {
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    #txtUrl {
+      width: 50%;
+      margin: 10px;
+      border: 1px solid #ccc;
+      padding: 0 5px;
+      border-radius: 4px;
+      line-height: 32px;
+    }
+
+    #ddlSite {
+      line-height: 32px;
+      display: inline-block;
+      height: 32px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #txtUrl:focus {
+      border-color: #50c1f6;
+    }
+
+    #main {
+      position: fixed;
+      left: 10%;
+      top: 100px;
+      bottom: 0;
+      width: 80%;
+    }
+  </style>
+  <script src="<$- UI_SITE $>/js/jquery.js"></script>
+  <script src="<$- UI_SITE $>/js/core.table.js"></script>
+  <script src="<$- UI_SITE $>/js/core.notify.js"></script>
+</head>
+
+<body>
+  <div id="top">
+    <div>
+      <div>
+        <input id="txtUrl" />
+        <button class="btn" id="btnInfo" type="button">查看请求头</button>
+      </div>
+    </div>
+  </div>
+  <div id="main"></div>
+</body>
+<script>
+  //查看信息头
+  $('#btnInfo').click(function () {
+    $.notify.showLoad({ text: '加载中...' });
+    $.post(
+      '/v1/public/utils/request',
+      { url: $('#txtUrl').val() },
+      function (d, status, o) {
+        $.notify.hideLoad();
+        if (d.state === 'success') {
+          $.notify.toast({ content: '查询成功!' });
+          var res = '';
+          for (var k in d.rdata) {
+            res += '<p>' + k + ':' + d.rdata[k] + '</p>';
+          }
+          $('#main').html(res);
+        }
+      });
+  });
+</script>
+
+</html>

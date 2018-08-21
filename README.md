@@ -10,3 +10,13 @@
 - 启动app: gulp
 - 测试基本接口(mocha --recursive) 测试图片上传方法要用修改图片路径,用shttp的attach方法
 - *生成apidoc: gulp doc
+
+```
+添加内容
+UtilsBLL.js 
+utils.js控制权 
+plugin articleparser.js
+utils.js API
+utils页面
+四个npm包: net-helper html-parser2 uri-parser-helper diff
+```

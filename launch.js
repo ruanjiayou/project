@@ -49,6 +49,7 @@ process.on("unhandledRejection", (reason) => {
   console.error(reason);
 });
 
+require('./config');
 const server = require(APP_PATH + '/app.js');
 
 server.listen(process.env.port, '0.0.0.0', () => {

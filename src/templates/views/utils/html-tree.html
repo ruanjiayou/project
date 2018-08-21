@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+  <meta name="Author" content="阮家友">
+  <meta name="Keywords" content="HTML,model,test">
+  <meta name="Description" content="special effect">
+  <meta name="time" content="2015-9-27 10:41:48">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>html页面结构</title>
+  <link rel="stylesheet" href="<$- UI_SITE $>/css/common.notify.css" />
+  <link rel="stylesheet" href="/bootstrap.min.css" />
+  <link rel="stylesheet" href="/style.css" />
+  <style type="text/css">
+    html,
+    body {
+      font-size: 14px;
+      margin: 0px;
+      padding: 0px;
+      font-family: Microsoft YaHei;
+    }
+
+    li {
+      list-style: none;
+    }
+
+    img,
+    iframe {
+      border: 0px;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .clear {
+      clear: both;
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 50px;
+    }
+
+    .btn {
+      line-height: 30px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 0 10px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      border-color: #50c1f6;
+    }
+
+    #top {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+      background-color: #FFF;
+      z-index: 2;
+    }
+
+    #top>div {
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    #txtUrl {
+      width: 50%;
+      margin: 10px;
+      border: 1px solid #ccc;
+      padding: 0 5px;
+      border-radius: 4px;
+      line-height: 32px;
+    }
+
+    #ddlSite {
+      line-height: 32px;
+      display: inline-block;
+      height: 32px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #txtUrl:focus {
+      border-color: #50c1f6;
+    }
+
+    #main {
+      width: 80%;
+      margin: 80px auto 20px auto;
+    }
+  </style>
+  <script src="<$- UI_SITE $>/js/jquery.js"></script>
+  <script src="<$- UI_SITE $>/js/core.notify.js"></script>
+</head>
+
+<body>
+  <div id="top">
+    <div>
+      <div>
+        <input id="txtUrl" />
+        <button class="btn" id="btnParse" type="button">查看html结构</button>
+      </div>
+    </div>
+  </div>
+  <div id="main">
+    <div id="result" class="tree well"></div>
+  </div>
+</body>
+<script>
+  /*
+  图标管理
+      根节点 icon-folder-open
+      父节点开 icon-minus-sign
+      父节点闭 icon-plus-sign
+      叶子节点 icon-leaf
+  */
+  $('#result').click(function (e) {
+    var o = $(e.target);
+    if (o.is('i')) {
+      o = o.parent();
+    }
+    if (o.attr('data-tree') === 'item') {
+      var i = o.children('i');
+      i.removeClass('icon-minus-sign icon-plus-sign');
+      var oul = o.siblings('ul');
+      if (oul.is(':visible') === true) {
+        i.addClass('icon-plus-sign');
+        oul.slideUp();
+      } else {
+        oul.slideDown();
+        i.addClass('icon-minus-sign');
+      }
+    }
+  });
+  var TYPE = {
+    ROOT: 'root',
+    S: 'single',
+    D: 'double',
+    ST: 'start',
+    SE: 'end',
+    TEXT: 'text',
+    COMMENT: 'comment'
+  };
+  //展示html结构
+  function json2tree(js) {
+    var res = '<li ';
+    res += js.children ? 'class="parent_li">' : '>';
+    var nodeName = js.nodeName;
+    var title = '';
+    if (js.nodeType === TYPE.ROOT) {
+      nodeName = '根';
+    } else if (js.nodeType === TYPE.TEXT) {
+      nodeName = '文本';
+      title = js.text;
+    } else if (js.nodeType === TYPE.COMMENT) {
+      nodeName = '注释';
+      title = js.text;
+    }
+    else {
+      title = js.attr === '' ? '' : js.attr;
+    }
+    var status = '';
+    if (js.children) {
+      status = 'icon-minus-sign';
+    } else {
+      status = 'icon-leaf';
+    }
+    if (title == undefined) {
+      console.log(js);
+      console.log(title);
+      return '';
+    }
+    title = title.replace(/["]/g, "'").replace(/[<]/g, "&lt;").replace(/[>]/g, '&gt;');
+    res += '<span data-tree="item"><i class="' + (js.nodeType === 0 ? 'icon-folder-open' : status) + '"></i>' + nodeName + '</span>';
+    res += '<label' + (title ? ' title="' + title + '">' : '>') + title + '</label>';
+    if (js.children) {
+      res += '<ul>';
+      for (var i = 0; i < js.children.length; i++) {
+        res += json2tree(js.children[i]);
+      }
+      res += '</ul>';
+    }
+    return res;
+  }
+
+  //查看信息JSON
+  $('#btnParse').click(function () {
+    if (/^\s*$/.test($('#txtUrl').val())) {
+      alert('url不能为空！');
+      return;
+    }
+    $.notify.showLoad();
+    $.post(
+      '/v1/public/utils/html-tree',
+      { url: $('#txtUrl').val() },
+      function (d, status, o) {
+        $.notify.hideLoad();
+        if (d.state === 'success') {
+          $('#result').html(json2tree(d.rdata));
+          $.notify.toast({ content: '解析成功!' });
+        }
+      });
+  });
+
+</script>
+
+</html>
