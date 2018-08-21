@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="Author" content="阮家友" />
+    <meta name="Keywords" content="HTML,model,test" />
+    <meta name="Description" content="special effect model" />
+    <meta name="time" content="2015-9-27 10:41:48" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>test</title>
+    <script src="/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shCore.js"></script>
+    <script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shBrushXml.js"></script>
+    <script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shBrushPerl.js"></script>
+    <link type="text/css" rel="stylesheet" href="/plugin/syntaxhighlighter3.0/styles/shCore.css" />
+    <link type="text/css" rel="stylesheet" href="/plugin/syntaxhighlighter3.0/styles/shThemeDefault.css" />
+    <script type="text/javascript">
+        SyntaxHighlighter.defaults['toolbar'] = false;  //去掉右上角问号图标
+        SyntaxHighlighter.config.tagName = 'pre';       //可以更改解析的默认Tag。
+        SyntaxHighlighter.config.bloggerMode = true;
+        SyntaxHighlighter.config.stripBrs = true;
+        SyntaxHighlighter.all();
+    </script>
+</head>
+
+<body>
+    <div id="center">
+        <h2>一键复制</h2>
+        <pre name="code" class="brush: js">
+        /**
+        * 复制文本
+        * @param id 复制节点Id   该节点不能隐藏
+        */
+        function copyText(id) {
+            //获取节点
+            var n = $('#' + id),
+                content = '',
+                tn = '';
+            if (n.length === 0) {
+                //节点为空直接返回
+                return;
+            }
+            tn = n[0].tagName.toLowerCase();
+            if (tn === 'input' || tn === 'textarea') {
+                content = n.val();
+            } else {
+                content = n.html();
+            }
+            if(window.clipboardData && window.clipboardData.setData) {
+                window.clipboardData.setData('Text', content);
+            }
+            if(document.execCommand) {
+                n.select();
+                document.execCommand('Copy');
+            }
+        }
+</pre>
+    </div>
+    <script>
+
+    </script>
+</body>
+
+</html>

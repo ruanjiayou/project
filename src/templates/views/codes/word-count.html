@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="Author" content="阮家友" />
+  <meta name="Keywords" content="HTML,model,test" />
+  <meta name="Description" content="special effect model" />
+  <meta name="time" content="2015-9-27 10:41:48" />
+  <meta name="renderer" content="webkit" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+  />
+  <title>test</title>
+  <script src="/scripts/jquery.js"></script>
+  <link href="/plugin/SyntaxHighlighter2.0/shCoreDefault.css" rel="stylesheet" />
+  <script src="/plugin/SyntaxHighlighter2.0/shCore.js"></script>
+  <script src="/plugin/syntaxhighlighter3.0/scripts/shBrushJScript.js"></script>
+  <script>
+    SyntaxHighlighter.defaults['toolbar'] = false;  //去掉右上角问号图标
+    SyntaxHighlighter.config.tagName = 'pre';       //可以更改解析的默认Tag。
+    SyntaxHighlighter.config.bloggerMode = true;
+    SyntaxHighlighter.config.stripBrs = true;
+    SyntaxHighlighter.all();
+  </script>
+</head>
+
+<body>
+  <pre name="code" class="brush: js">
+/**
+ * 小说字数统计算法
+ */
+function count(str) {
+  let res = {
+    bytes: 0,
+    chinese: 0,
+    english: 0,
+    num: 0,
+    punctuation: 0
+  };
+  for (let i = 0; i < str.length; i++) {
+    let c = str.charAt(i);
+    if (/[\u4e00-\u9fa5]/.test(c)) {
+      // 中文
+      res.chinese++;
+    } else if (/[^\x00-\xff]/.test(c)) {
+      // 标点?
+      res.punctuation++;
+    } else {
+      // 英文
+      res.english++;
+    }
+    if (/[0-9]/.test(c)) {
+      // 数字
+      res.num++;
+      res.english--;
+    }
+  }
+  res.bytes = (res.chinese + res.punctuation) * 2 + res.english + res.num;
+  return res;
+}
+
+    </pre>
+  <script>
+
+  </script>
+</body>
+
+</html>

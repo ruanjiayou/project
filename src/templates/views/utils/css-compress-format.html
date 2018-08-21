@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>CSS代码格式化 css在线压缩工具</title>
+    <meta http-equiv="x-ua-compatible" content="ie=7">
+    <meta name="robots" content="all">
+    <meta name="author" content="dxy | www.jb51.net">
+    <meta name="Copyright" content="Copyright (c) 2006-2008 jb51.net">
+    <meta name="description" content="现CSS代码格式化 css在线压缩工具,用来减少文件体积或增加可读性">
+    <meta name="keywords" content="CSS格式化,css在线压缩">
+    <script language="JavaScript">
+        function $() {
+            var elements = new Array();
+            for (var i = 0; i < arguments.length; i++) {
+                var element = arguments[i];
+                if (typeof element == 'string')
+                    element = document.getElementById(element);
+                if (arguments.length == 1)
+                    return element;
+                elements.push(element);
+            }
+            return elements;
+        }
+
+        function CSSencode(code) {
+            code = code.replace(/\n/ig, '');
+            code = code.replace(/(\s){2,}/ig, '$1');
+            code = code.replace(/\t/ig, '');
+            code = code.replace(/\n\}/ig, '\}');
+            code = code.replace(/\n\{\s*/ig, '\{');
+            code = code.replace(/(\S)\s*\}/ig, '$1\}');
+            code = code.replace(/(\S)\s*\{/ig, '$1\{');
+            code = code.replace(/\{\s*(\S)/ig, '\{$1');
+            return code;
+        }
+
+        function CSSdecode(code) {
+            code = code.replace(/(\s){2,}/ig, '$1');
+            code = code.replace(/(\S)\s*\{/ig, '$1 {');
+            code = code.replace(/\*\/(.[^\}\{]*)}/ig, '\*\/\n$1}');
+            code = code.replace(/\/\*/ig, '\n\/\*');
+            code = code.replace(/;\s*(\S)/ig, ';\n\t$1');
+            code = code.replace(/\}\s*(\S)/ig, '\}\n$1');
+            code = code.replace(/\n\s*\}/ig, '\n\}');
+            code = code.replace(/\{\s*(\S)/ig, '\{\n\t$1');
+            code = code.replace(/(\S)\s*\*\//ig, '$1\*\/');
+            code = code.replace(/\*\/\s*([^\}\{]\S)/ig, '\*\/\n\t$1');
+            code = code.replace(/(\S)\}/ig, '$1\n\}');
+            code = code.replace(/(\n){2,}/ig, '\n');
+            code = code.replace(/:/ig, ': ');
+            code = code.replace(/  /ig, ' ');
+            return code;
+        }
+    </script>
+</head>
+
+<body>
+    <div style="width:800px;margin:0 auto;padding-top:30px;font: 12px Tahoma,sans-serif;">
+        <table border="0" cellpadding="0" cellspacing="3" width="100%">
+            <tbody>
+                <tr>
+                    <td>提供的CSS代码格式化和css在线压缩工具，经过测试，经常格式化后的代码，有时会因为书写css伪类时冒号后多个空格导致该规则失效。所以建议用工具来实现。推荐使用工具<a href="http://www.jb51.net/softs/15914.html"
+                            target="_blank">YUI Compressor</a> 、<a href="http://www.jb51.net/softs/33904.html" target="_blank">Closure
+                            Compiler Google出品的JavaScript优化器</a>或者 CSSTidy等离线工具，直接在线操作不仅可压缩js也可以压缩css。</td>
+                </tr>
+                <tr>
+                    <td>
+                        <br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>/*请将CSS代码复制到下面*/
+                        <font color="#0000ff">CSS代码格式化</font>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea id="code" title="www.jb51.net" style="WIDTH: 100%; HEIGHT: 300px"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input onclick="$('code').value = CSSdecode($('code').value);" value="格式化" type="button">|
+                        <input onclick="$('code').value = CSSencode($('code').value);" value="压缩化" type="button">|
+                        <input onclick="window.clipboardData.setData('Text',$('code').value);" value="复制" type="button">|
+                        <input onclick="$('code').value = window.clipboardData.getData('Text');" value="粘贴" type="button">|
+                        <input onclick="$('code').value = ''" value="清空" type="button">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>

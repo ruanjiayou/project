@@ -1,0 +1,3 @@
+用浏览器打开index.html即可,推荐Firefox、Chrome
+
+syntaxhighlighter_3.0.83.zip为官网下载

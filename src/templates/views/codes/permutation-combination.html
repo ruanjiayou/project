@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+    <meta name="Author" content="阮家友"/>
+    <meta name="Keywords" content="HTML,model,test"/>
+    <meta name="Description" content="special effect model"/>
+    <meta name="time" content="2015-9-27 10:41:48"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+	<title>test</title>
+    <script src="/scripts/jquery.js"></script>
+    <link rel="stylesheet" href="/plugin/SyntaxHighlighter2.0/shCoreDefault.css"/>
+    <script src="/plugin/SyntaxHighlighter2.0/shCore.js"></script>
+	<script type="text/javascript" src="/plugin/syntaxhighlighter3.0/scripts/shBrushJScript.js"></script>
+    <script type="text/javascript">
+        SyntaxHighlighter.defaults['toolbar'] = false;  //去掉右上角问号图标
+        SyntaxHighlighter.config.tagName = 'pre';       //可以更改解析的默认Tag。
+        SyntaxHighlighter.config.bloggerMode = true; 
+        SyntaxHighlighter.config.stripBrs = true;  
+        SyntaxHighlighter.all();
+    </script>
+</head>
+<body>
+    <h2>高亮版本分为2.0和3.0小心路径</h2>
+    <p>关于阶乘的讨论:</p>
+    <p>1.大数的表示与存储 数组表示 下标表示进位</p>
+    <p>2.精度要求 10^-8</p>
+    <pre name="code"class="brush: js">
+    //Combination 组合数 排列数 Arrangement(permutation)
+    0!=1
+    A(n,m) = n!/(n-m)!;A(n,n) = n!;
+    C(n,m) = C(n, n-m) = A(n,m)/m!;
+    // 计算阶乘
+    function factorial(n){
+        let res = 1
+        if(typeof n !== 'number' || n<=0){
+            return res;
+        }
+        while(n) res *= n--;
+        return res;
+    }
+    // 计算排列数
+    function arrangement(n,m){
+        return factorial(n)/factorial(n-m);
+    }
+    // 计算组合数
+    function combination(n,m){
+        return arrangement(n,m)/factorial(m);
+    }
+    </pre>
+<script>
+
+</script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+﻿<html>
+
+<head>
+	<title>Base64编码/解码器 在线解码</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+	<style type="text/css">
+		#code {
+			text-align: left;
+		}
+	</style>
+	<style type="text/css">
+		.c {
+			text-align: left;
+		}
+
+		body,
+		td,
+		th {
+			font-size: 12px;
+		}
+
+		a:link {
+			color: #666;
+			text-decoration: none;
+		}
+
+		a:visited {
+			text-decoration: none;
+			color: #666;
+		}
+
+		a:hover {
+			text-decoration: underline;
+			color: #666;
+		}
+
+		a:active {
+			text-decoration: none;
+			color: #F00;
+		}
+	</style>
+</head>
+
+<body style="width:80%;margin:0 auto;">
+	<h3>将代码以BASE64方式加密、解密</h3>
+	<form id="form1">
+		<p class="medium">请输入要进行编码或解码的字符：</p>
+		<textarea name="src" id="src" cols="80" rows="6" style="width:600px;height:120px;"></textarea>
+		<p class="tcenter">
+			<input id="encodeBtn" type="button" value="编码" name="encode" class="button"> &nbsp;
+			<input id="decodeBtn" type="button" value="解码" name="decode" class="button">
+			<label><input type="checkbox" value="hex" name="opt" id="opt"> 解码结果以16进制显示</label>
+		</p>
+		<p class="medium">Base64编码或解码结果：</p>
+		<textarea name="dest" id="dest" cols="80" readonly="true" rows="6" style="width:600px;height:120px;"></textarea>
+	</form>
+	<hr size="1" noshade="noshade" class="hline">
+	<p>
+		选择要转为base64的图片:<input id="pic" name="pic" type="file" />
+	</p>
+	<textarea id="base64" cols="80" rows="6" style="width:600px;height:120px;"></textarea>
+	<p>
+		<button id="antiTrans">还原base64编码为图片</button>
+	</p>
+	<img id="picShow" />
+	<p class="medium" style="width:600px">
+		<strong>Base64编码说明</strong><br> 　　Base64编码要求把3个8位字节（3*8=24）转化为4个6位的字节（4*6=24），之后在6位的前面补两个0，形成8位一个字节的形式。 如果剩下的字符不足3个字节，则用0填充，输出字符使用'='，因此编码后输出的文本末尾可能会出现1或2个'='。
+	</p>
+	<p class="medium" style="width:600px">
+		为了保证所输出的编码位可读字符，Base64制定了一个编码表，以便进行统一转换。编码表的大小为2^6=64，这也是Base64名称的由来。
+	</p>
+	<h2 class="medium">Base64编码表</h2>
+	<table class="mtable" style="text-align:center">
+		<tbody>
+			<tr>
+				<th scope="col">码值</th>
+				<th scope="col">字符</th>
+				<td rowspan="18">&nbsp;</td>
+				<th scope="col">码值</th>
+				<th scope="col">字符</th>
+				<td rowspan="18">&nbsp;</td>
+				<th scope="col">码值</th>
+				<th scope="col">字符</th>
+				<td rowspan="18">&nbsp;</td>
+				<th scope="col">码值</th>
+				<th scope="col">字符</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>A</td>
+				<td>16</td>
+				<td>Q</td>
+				<td>32</td>
+				<td>g</td>
+				<td>48</td>
+				<td>w</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>B</td>
+				<td>17</td>
+				<td>R</td>
+				<td>33</td>
+				<td>h</td>
+				<td>49</td>
+				<td>x</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>C</td>
+				<td>18</td>
+				<td>S</td>
+				<td>34</td>
+				<td>i</td>
+				<td>50</td>
+				<td>y</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>D</td>
+				<td>19</td>
+				<td>T</td>
+				<td>35</td>
+				<td>j</td>
+				<td>51</td>
+				<td>z</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>E</td>
+				<td>20</td>
+				<td>U</td>
+				<td>36</td>
+				<td>k</td>
+				<td>52</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>F</td>
+				<td>21</td>
+				<td>V</td>
+				<td>37</td>
+				<td>l</td>
+				<td>53</td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>6</td>
+				<td>G</td>
+				<td>22</td>
+				<td>W</td>
+				<td>38</td>
+				<td>m</td>
+				<td>54</td>
+				<td>2</td>
+			</tr>
+			<tr>
+				<td>7</td>
+				<td>H</td>
+				<td>23</td>
+				<td>X</td>
+				<td>39</td>
+				<td>n</td>
+				<td>55</td>
+				<td>3</td>
+			</tr>
+			<tr>
+				<td>8</td>
+				<td>I</td>
+				<td>24</td>
+				<td>Y</td>
+				<td>40</td>
+				<td>o</td>
+				<td>56</td>
+				<td>4</td>
+			</tr>
+			<tr>
+				<td>9</td>
+				<td>J</td>
+				<td>25</td>
+				<td>Z</td>
+				<td>41</td>
+				<td>p</td>
+				<td>57</td>
+				<td>5</td>
+			</tr>
+			<tr>
+				<td>10</td>
+				<td>K</td>
+				<td>26</td>
+				<td>a</td>
+				<td>42</td>
+				<td>q</td>
+				<td>58</td>
+				<td>6</td>
+			</tr>
+			<tr>
+				<td>11</td>
+				<td>L</td>
+				<td>27</td>
+				<td>b</td>
+				<td>43</td>
+				<td>r</td>
+				<td>59</td>
+				<td>7</td>
+			</tr>
+			<tr>
+				<td>12</td>
+				<td>M</td>
+				<td>28</td>
+				<td>c</td>
+				<td>44</td>
+				<td>s</td>
+				<td>60</td>
+				<td>8</td>
+			</tr>
+			<tr>
+				<td>13</td>
+				<td>N</td>
+				<td>29</td>
+				<td>d</td>
+				<td>45</td>
+				<td>t</td>
+				<td>61</td>
+				<td>9</td>
+			</tr>
+			<tr>
+				<td>14</td>
+				<td>O</td>
+				<td>30</td>
+				<td>e</td>
+				<td>46</td>
+				<td>u</td>
+				<td>62</td>
+				<td>+</td>
+			</tr>
+			<tr>
+				<td>15</td>
+				<td>P</td>
+				<td>31</td>
+				<td>f</td>
+				<td>47</td>
+				<td>v</td>
+				<td>63</td>
+				<td>/</td>
+			</tr>
+		</tbody>
+	</table>
+	<br>
+	<br>
+	<br>
+	<br> 通过本工具可以对代码进行Base64加密或者解密。Base64是网络上最常见的用于传输8Bit字节代码的编码方式之一。 <br>
+	<br>
+	<br>
+	<script>
+		// 图片编码
+		document.getElementById('pic').onchange = function (e) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				document.getElementById('base64').value = e.target.result;
+			}
+			reader.readAsDataURL(this.files[0]);
+		}
+		// base64显示为图片
+		document.getElementById('antiTrans').onclick = function () {
+			document.getElementById('picShow').src = document.getElementById('base64').value;
+		}
+		// 字符串编码
+		document.getElementById('encodeBtn').onclick = function () {
+			document.getElementById('dest').value = b64EncodeUnicode(document.getElementById('src').value);
+		}
+		function b64EncodeUnicode(str) {
+			return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+				return String.fromCharCode('0x' + p1);
+			}));
+		}
+		// 字符串解码
+		document.getElementById('decodeBtn').onclick = function () {
+			document.getElementById('dest').value = b64DecodeUnicode(document.getElementById('src').value);
+		}
+		function b64DecodeUnicode(str) {
+			return decodeURIComponent(atob(str).split('').map(function (c) {
+				return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+			}).join(''));
+		}
+	</script>
+</body>
+
+</html>

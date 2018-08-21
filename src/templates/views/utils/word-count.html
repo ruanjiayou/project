@@ -1,0 +1,291 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<title>在线字数统计 - 在线字数计算工具</title>
+	<meta name="keywords" content="字数统计,自动字数统计器,在线字数计算工具">
+	<meta name="description" content="字数统计,在线字数计算工具,自动字数统计器，帮助计算字符数的小工具,小说作者和或编辑必备工具。">
+	<meta http-equiv="Content-Type" content="text/html; charset=gbk">
+
+	<style type="text/css">
+		body {
+			margin: 0;
+		}
+
+		td {
+			font-size: 9pt;
+			line-height: 19px;
+		}
+
+		h1 {
+			font-weight: 700;
+			font-size: 16px;
+			text-align: center;
+			margin: 30px auto 20px
+		}
+
+		.content {
+			font-size: 14px;
+		}
+
+		a.bookmark:visited,
+		a.bookmark:link,
+		a.bookmark:active {
+			font-size: 9pt;
+			color: #0E5EE2;
+			text-decoration: underline;
+		}
+
+		a.bookmark:hover {
+			text-decoration: none;
+		}
+
+		a:visited,
+		a:link,
+		a:active {
+			font-size: 9pt;
+			color: #333;
+			text-decoration: none;
+		}
+
+		a:hover {
+			color: #0E5EE2;
+			text-decoration: underline;
+		}
+
+		.white {
+			color: #fff;
+		}
+
+		a.d:hover {
+			font-size: 13px;
+			color: #CFF1FA;
+			text-decoration: underline;
+			font-weight: 700;
+		}
+
+		a.d:link {
+			font-size: 13px;
+			color: #FFF;
+			text-decoration: none;
+			font-weight: 700;
+		}
+
+		a.d:visited {
+			font-size: 13px;
+			color: #CFF1FA;
+			font-weight: 700;
+		}
+
+		a.c:link {
+			color: #666;
+			text-decoration: underline;
+		}
+
+		a.c:visited {
+			color: #666;
+			text-decoration: none;
+		}
+
+		a.c:hover {
+			font-weight: 700;
+			color: #666;
+			text-decoration: underline;
+		}
+
+		a.b:hover {
+			font-size: 10pt;
+			color: #36F;
+			text-decoration: none;
+		}
+
+		a.e:hover {
+			font-size: 12px;
+			color: #CFF1FA;
+			text-decoration: underline;
+			font-weight: 700;
+		}
+
+		a.e:link {
+			font-size: 12px;
+			color: #FFF;
+			text-decoration: none;
+			font-weight: 700;
+		}
+
+		a.e:visited {
+			font-size: 12px;
+			color: #CFF1FA;
+			font-weight: 700;
+		}
+
+		.hongzi {
+			color: red;
+		}
+
+		a.f:hover {
+			font-size: 13px;
+			border: solid 1px #69F;
+			background-color: #FBFDFF;
+			height: 18px;
+			width: 26px;
+			font-weight: 700;
+			color: #00F;
+		}
+
+		.pageNumlink {
+			font-size: 13px;
+			border: solid 1px #69F;
+			background-color: #39F;
+			height: 18px;
+			width: 26px;
+			color: #FFF;
+			font-weight: 700;
+		}
+
+		TEXTAREA,
+		SELECT {
+			font-size: 9pt;
+			color: #000;
+			font-family: Verdana, Arial, Helvetica, sans-serif, 宋体;
+			background-color: #fff;
+			border-color: silver;
+			border-width: 1px;
+		}
+
+		a.b:link,
+		a.b:visited {
+			font-size: 10pt;
+			color: #0321C9;
+			text-decoration: underline;
+		}
+
+		a.f:link,
+		a.f:visited {
+			font-size: 13px;
+			border: solid 1px #69F;
+			background-color: #FBFDFF;
+			height: 18px;
+			width: 26px;
+			color: #00F;
+		}
+
+		.num {
+			font-size: 14px;
+			font-weight: 700;
+			color: #F00
+		}
+
+		.f20 {
+			font-size: 30px;
+			font-weight: 700;
+			color: #F00
+		}
+	</style>
+</head>
+
+<body>
+	<h1>在线字数统计 - 在线字数计算器</h1>
+	<table align="center" bgcolor="#ffffff" border="0" cellpadding="5" cellspacing="1" width="940">
+		<tbody>
+			<tr>
+				<td bgcolor="#e5f0fb"><label>文章输入区</label></td>
+				<td bgcolor="#e5f0fb"><textarea id="content" name="content" rows="20" cols="127"></textarea></td>
+			</tr>
+			<tr>
+				<td bgcolor="#e5f0fb">字数统计</td>
+				<td style="LINE-HEIGHT: 200%" bgcolor="#e5f0fb">
+					<strong>字符总数：<span id="numwords" class="f20">0</span> 个字符 (汉字算两个字符，数字、空格、英文字母算做一个字符) </strong><br> 汉字：
+					<span id="zhongwen" class="num">０</span> 个 包括中文标点共：<span id="zbiaodian" class="num">０</span> 个<br> 英文：
+					<span id="yingwen" class="num">０</span> 个 （含英文状态下的数字）<br> 数字：
+					<span id="shuzi" class="num">０</span> 个 （仅指英文状态下的数字）
+				</td>
+			</tr>
+			<tr>
+				<td bgcolor="#e5f0fb">小说作者</td>
+				<td bgcolor="#e5f0fb">中文+数字：<span id="zishu" class="num">０</span></td>
+			</tr>
+		</tbody>
+	</table>
+	<script language="javascript">
+		function $(id) { return document.getElementById(id); }
+		var EventUtil = function () { };
+		EventUtil.addEventHandler = function (obj, EventType, Handler) {
+			//如果是FF
+			if (obj.addEventListener) {
+				obj.addEventListener(EventType, Handler, false);
+			}
+			//如果是IE
+			else if (obj.attachEvent) {
+				obj.attachEvent('on' + EventType, Handler);
+			}
+			else {
+				obj['on' + EventType] = Handler;
+			}
+		}
+
+		//alert($("chaptercontent").value);
+		if ($("content")) {
+			EventUtil.addEventHandler($('content'), 'propertychange', CountChineseCharacters);
+			EventUtil.addEventHandler($('content'), 'input', CountChineseCharacters);
+			//EventUtil.addEventHandler($('chaptercontent'),'keydown',CountChineseCharacters('chaptercontent'));
+		}
+		function showit(Word) {
+			alert(Word);
+		}
+		function CountChineseCharacters() {
+			Words = $('content').value;
+			var W = new Object();
+			var Result = new Array();
+			var iNumwords = 0;
+			var sNumwords = 0;
+			var sTotal = 0;//双字节字符;
+			var iTotal = 0;//中文字符；
+			var eTotal = 0;//Ｅ文字符
+			var otherTotal = 0;
+			var bTotal = 0;
+			var inum = 0;
+
+			for (i = 0; i < Words.length; i++) {
+				var c = Words.charAt(i);
+				if (c.match(/[\u4e00-\u9fa5]/)) {
+					if (isNaN(W[c])) {
+						iNumwords++;
+						W[c] = 1;
+					}
+					iTotal++;
+				}
+
+			}
+
+
+			for (i = 0; i < Words.length; i++) {
+				var c = Words.charAt(i);
+				if (c.match(/[^\x00-\xff]/)) {
+					if (isNaN(W[c])) {
+						sNumwords++;
+
+					}
+					sTotal++;
+				}
+				else {
+					eTotal++;
+				}
+				if (c.match(/[0-9]/)) {
+					inum++;
+				}
+
+			}
+
+			//alert(iTotal);
+			document.getElementById('zhongwen').innerHTML = iTotal;
+			document.getElementById('zishu').innerHTML = inum + iTotal;
+			document.getElementById('zbiaodian').innerHTML = sTotal;
+			document.getElementById('yingwen').innerHTML = eTotal;
+			document.getElementById('shuzi').innerHTML = inum;
+			document.getElementById("numwords").innerHTML = iTotal * 2 + (sTotal - iTotal) * 2 + eTotal;
+		}
+	</script>
+</body>
+
+</html>

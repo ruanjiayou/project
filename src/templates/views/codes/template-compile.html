@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="Author" content="阮家友" />
+    <meta name="Keywords" content="HTML,model,test" />
+    <meta name="Description" content="special effect model" />
+    <meta name="time" content="2015-9-27 10:41:48" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>字符串模板编译</title>
+    <script src="/scripts/jquery.js"></script>
+    <link href="/plugin/SyntaxHighlighter2.0/shCoreDefault.css" rel="stylesheet" />
+    <script src="/plugin/SyntaxHighlighter2.0/shCore.js"></script>
+    <script src="/plugin/syntaxhighlighter3.0/scripts/shBrushJScript.js"></script>
+    <script>
+        SyntaxHighlighter.defaults['toolbar'] = false;  //去掉右上角问号图标
+        SyntaxHighlighter.config.tagName = 'pre';       //可以更改解析的默认Tag。
+        SyntaxHighlighter.config.bloggerMode = true;
+        SyntaxHighlighter.config.stripBrs = true;
+        SyntaxHighlighter.all();
+    </script>
+</head>
+
+<body>
+    <h2>高亮版本分为2.0和3.0小心路径</h2>
+    <pre name="code" class="brush: js">
+/**
+ * 编译字符模板. '123{test}456' ---{test:'abc'} ---> '123abc456'
+ */
+function compile(str, data) {
+let reg = /\{\s*([a-z0-9]+)\s*\}/g, res = str, m;
+while ((m = reg.exec(str)) !== null) {
+  let k = m[0], v = m[1], value = data[v] === undefined ? '??' : data[v];
+  res = res.replace(k, value);
+}
+return res;
+}
+    </pre>
+    <script>
+
+    </script>
+</body>
+
+</html>

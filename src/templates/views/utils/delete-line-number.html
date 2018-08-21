@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>删除行号</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="Author" content="ruanjiayou">
+    <meta name="Keywords" content="cellphone app">
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body {
+            font-family: 'Microsoft Yahei';
+            font-size: 14px;
+            width: 100%;
+            height: 100%;
+        }
+
+        ul {
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            list-style: none;
+            height: 25px;
+            line-height: 25px;
+            text-indent: 10px;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        img {
+            border: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        a :link {
+            color: #000;
+        }
+
+        body a:hover {
+            color: #c00;
+        }
+
+        a:visited {
+            color: #000;
+        }
+
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+
+            content: ' ';
+        }
+
+        .clearfix:after {
+            clear: both;
+        }
+
+        #center {
+            width: 1100px;
+            margin: 0 auto;
+            padding-top: 20px;
+        }
+
+        #text {}
+
+        .txt {
+            width: 500px;
+            height: 400px;
+            border: 1px solid #333;
+            float: left;
+            margin-right: 20px;
+            resize: none;
+            overflow: scroll;
+        }
+
+        #rule {
+            position: fixed;
+            top: 150px;
+            right: 200px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="center">
+        <p id="show"></p>
+        <div class="clearfix">
+            <textarea id="text" class="txt">test</textarea>
+            <textarea id="res" class="txt" readonly="true">test</textarea>
+        </div>
+        <button id="deal">删除行号</button>
+        <button id="deal2">\r转p标签</button>
+    </div>
+    <script type="text/javascript">
+        //输入的内容
+        var otext = document.getElementById('text');
+        //输出的内容
+        var ores = document.getElementById("res");
+        //按钮
+        var obtn = document.getElementById('deal');
+
+        obtn.onclick = function () {
+            //删除行号正则
+            //一次替换一个
+            var re = /\n\s*\d+/;                    //样式一
+            //全局匹配
+            var reg = new RegExp(/\n\s*\d*/g);  //样式二
+            var tempText = '\n' + otext.value;
+            var returnStr = "";
+            //删除行号
+            var returnText = tempText;
+            while ((match = reg.exec(tempText)) != null) {
+                returnText = returnText.replace(re, '\n');
+            }
+            ores.value = returnText.trim();
+        }
+        document.getElementById("deal2").onclick = function () {
+            //一次替换一个
+            var re = /[\r\n]+\s*/;
+            //全局匹配
+            var reg = new RegExp(/[\r\n]+/g);  //样式二
+            var tempText = otext.value;
+            var returnStr = "";
+            //删除行号
+            var returnText = tempText;
+            while ((match = reg.exec(tempText)) != null) {
+                console.log(match);
+                returnText = returnText.replace(re, '</p><p>');
+            }
+            ores.value = "<p>" + returnText + "</p>";
+        }
+    </script>
+</body>
+
+</html>
