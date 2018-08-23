@@ -53,8 +53,7 @@ function develop(mode) {
     delay: 3000,
     env: {
       NODE_ENV: mode,
-      PORT: '3000',
-      PROJECT_NAME: 'nodejs'
+      PROJECT_NAME
     }
   });
   stream

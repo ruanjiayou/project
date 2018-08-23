@@ -1,5 +1,8 @@
 require('./config.default');
 // 项目单独参数
+define('PROJECT_NAME', 'utils-web');
+define('PORT', '8091');
+define('UI_SITE', 'http://180.76.183.201:2017');
 
 // 鉴权
 define('AUTH_KEY', 'token');  // 鉴权字段
