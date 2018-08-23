@@ -7,7 +7,6 @@ const pm2 = require('pm2');
 const fs = require('fs');
 const path = require('path');
 const nodemon = require('gulp-nodemon');
-const migration = require('./bin/migration');
 
 /**
  * 清空生成的dist目录
@@ -32,11 +31,11 @@ gulp.task('clean', () => {
  * 生成api文档
  */
 gulp.task('doc', (done) => {
-  apidoc({ src: 'src/routes', dest: 'public/doc', debug: false }, done);
+  apidoc({ src: 'src/routes', dest: 'static/doc', debug: false }, done);
 });
 
 /**
- * 生成代码
+ * TODO:生成代码
  */
 gulp.task('dist', async () => {
   pump([
@@ -76,7 +75,7 @@ async function publish(mode) {
 /**
  * 启动项目
  */
-gulp.task('develop', () => {
+gulp.task('dev', () => {
   develop('dev');
 });
 gulp.task('publish', () => {
@@ -84,7 +83,10 @@ gulp.task('publish', () => {
 });
 
 gulp.task('migration', () => {
+  process.env.NODE_ENV = 'dev';
+  require('./config.project');
+  const migration = require('./bin/migration');
   migration(process.argv);
 });
 
-gulp.task('default', ['develop']);
+gulp.task('default', ['dev']);

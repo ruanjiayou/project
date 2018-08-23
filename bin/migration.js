@@ -5,7 +5,7 @@
  */
 const _ = require('lodash');
 const fs = require('fs');
-const models = require(`../${NODE_ENV}/models/index`);
+const models = require(`${MODEL_PATH}/index`);
 
 const alterDatabase = async (argv) => {
   argv = getArgv(argv);
