@@ -1,5 +1,23 @@
 require('./config.default');
+// 项目默认环境参数
+define('PORT', '3000');
+define('NODE_ENV', 'dev');
+
+// 环境变量
+if (process.env.PORT === undefined) {
+  process.env.PORT = global.PORT;
+} else {
+  PORT = process.env.PORT;
+}
+if (process.env.NODE_ENV === undefined) {
+  process.env.NODE_ENV = global.NODE_ENV;
+} else {
+  NODE_ENV = process.env.NODE_ENV;
+}
+
 // 项目单独参数
+define('PROJECT_NAME', 'project');
+// 可在此处覆盖PORT或default文件文件的配置
 
 // 鉴权
 define('AUTH_KEY', 'token');  // 鉴权字段
