@@ -1,13 +1,6 @@
-// 所有项目必填参数
-define('PORT', '3000');
-define('NODE_ENV', 'dev');
-define('PROJECT_NAME', 'project');
-
+require('./config.default');
 // 项目单独参数
-
-// 环境变量
-process.env.port = global.PORT;
-process.env.NODE_ENV = global.NODE_ENV;
+define('PROJECT_NAME', 'project');
 
 // 鉴权
 define('AUTH_KEY', 'token');  // 鉴权字段
