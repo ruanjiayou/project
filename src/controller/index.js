@@ -1,6 +1,8 @@
 module.exports = {
+  'get /': (req, res, next) => {
+    res.render('index', { UI_SITE });
+  },
   'get /index(\.html)?': (req, res, next) => {
-    console.log(UI_SITE);
     res.render('index', { UI_SITE });
   }
 }
