@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const models = require('../models/index');
+const models = require(MODEL_PATH + '/index');
 
 /**
  * t/transaction: transaction

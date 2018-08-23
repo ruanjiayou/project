@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const Hinter = require('./Hinter');
 
-const authCfg = require(CONFIG_PATH + 'auth');
+const authCfg = require(CONFIG_PATH + '/auth');
 
 /**
  * 采用sha1 + salt

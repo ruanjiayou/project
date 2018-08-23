@@ -1,8 +1,8 @@
 const _ = require('lodash');
-const auth = require('../lib/authHelper');
-const BaseBLL = require('./BaseBLL');
-const validater = require('../lib/validater');
-const thrower = require('../lib/thrower');
+const auth = require(LIB_PATH + '/authHelper');
+const BaseBLL = require(BLL_PATH + '/BaseBLL');
+const validater = require(LIB_PATH + '/validater');
+const thrower = require(LIB_PATH + '/thrower');
 
 class UserBLL extends BaseBLL {
   constructor() {

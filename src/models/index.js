@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
-const mysqlCfg = require('../config/db')[NODE_ENV];
-const loader = require('../lib/loader');
+const mysqlCfg = require(CONFIG_PATH + '/db')[NODE_ENV];
+const loader = require(LIB_PATH + '/loader');
 
 const models = {
   Op: null,

@@ -24,10 +24,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // .国际化
-app.use(require(LIB_PATH + 'i18nHelper'));
+app.use(require(LIB_PATH + '/i18nHelper'));
 
 // .文件处理中间件
-app.use(require(LIB_PATH + 'uploadHelper'));
+app.use(require(LIB_PATH + '/uploadHelper'));
 
 // 自动清理文件...日
 //app.use(multerAutoReap);
@@ -40,7 +40,7 @@ app.use(function (req, res, next) {
 });
 
 // .添加自定义响应方法(自动处理json:status与result).
-const presenter = require(LIB_PATH + 'presenter');
+const presenter = require(LIB_PATH + '/presenter');
 app.use(presenter({
   page: REQ_PAGE,
   limit: REQ_LIMIT,
@@ -52,7 +52,7 @@ app.use(presenter({
 require('./router')(app);
 
 // .error异常处理
-const Hinter = require(LIB_PATH + 'Hinter');
+const Hinter = require(LIB_PATH + '/Hinter');
 app.use(function (err, req, res, next) {
   console.log(err);
   if (err instanceof Hinter) {

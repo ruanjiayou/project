@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const emailCfg = require(CONFIG_PATH + 'email');
+const emailCfg = require(CONFIG_PATH + '/email');
 const fs = require('fs');
 const path = require('path');
 

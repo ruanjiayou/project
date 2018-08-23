@@ -1,8 +1,8 @@
 module.exports = {
-  key: 'token',
+  key: AUTH_KEY,
   type: 'JWT',
   alg: 'HS256',
-  exp: 24 * 3600,
-  secret: 'qiaoliting',
-  salt: '7758'
+  exp: AUTH_EXP,
+  secret: AUTH_SECRET,
+  salt: AUTH_SALT
 };
