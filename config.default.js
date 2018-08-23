@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === undefined) {
 // 项目路径
 define('ROOT_PATH', __dirname);
 // 应用程序路径
-define('APP_PATH', NODE_ENV === 'dev' ? `${ROOT_PATH}/src` : `${ROOT_PATH}/dist`);
+define('APP_PATH', `${ROOT_PATH}/src`);
 // 配置路径
 define('CONFIG_PATH', `${APP_PATH}/config`);
 // 库文件路径

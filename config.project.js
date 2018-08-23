@@ -1,6 +1,5 @@
 require('./config.default');
 // 项目单独参数
-define('PROJECT_NAME', 'project');
 
 // 鉴权
 define('AUTH_KEY', 'token');  // 鉴权字段
