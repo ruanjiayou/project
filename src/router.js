@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const loader = require(LIB_PATH + 'loader');
+const loader = require(LIB_PATH + '/loader');
 let routes = [];
 
 /**
@@ -57,14 +57,14 @@ function handler(info) {
  * 加载所有路由
  */
 loader({
-  dir: APP_PATH + 'routes/',
+  dir: APP_PATH + '/routes',
   recusive: true
 }, handler);
 /**
  * 加载所有控制器
  */
 loader({
-  dir: APP_PATH + 'controller/',
+  dir: APP_PATH + '/controller',
   recusive: true
 }, handler);
 
