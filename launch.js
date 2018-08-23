@@ -1,9 +1,9 @@
 global.define = function (key, value) {
   global[key] = value;
 };
+
 require('./config');
-process.env.port = global.PORT;
-process.env.NODE_ENV = global.NODE_ENV;
+
 // 项目路径
 define('ROOT_PATH', __dirname);
 // 应用程序路径
@@ -56,7 +56,6 @@ process.on("unhandledRejection", (reason) => {
   console.error(reason);
 });
 
-require('./config');
 const server = require(APP_PATH + '/app.js');
 
 server.listen(PORT, '0.0.0.0', () => {
