@@ -10,6 +10,10 @@ define('UI_SITE', 'http://180.76.183.201:2017');
 process.env.port = global.PORT;
 process.env.NODE_ENV = global.NODE_ENV;
 
+// 环境变量
+process.env.port = global.PORT;
+process.env.NODE_ENV = global.NODE_ENV;
+
 // 鉴权
 define('AUTH_KEY', 'token');  // 鉴权字段
 define('AUTH_SECRET', '');    // 鉴权密匙
