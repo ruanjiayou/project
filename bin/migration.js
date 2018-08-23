@@ -1,13 +1,11 @@
 /**
  * @author ruanjiayou
  * @description 刷新数据库
- * @time 2018-4-3 17:19:36
+ * @time 2018-8-23 15:41:10
  */
 const _ = require('lodash');
 const fs = require('fs');
-process.env.NODE_ENV = _.isNil(process.env.NODE_ENV) ? 'dev' : process.env.NODE_ENV;
-const dir = process.env.NODE_ENV === 'dev' ? 'src' : 'dist';
-const models = require(`../${dir}/models/index`);
+const models = require(`../${NODE_ENV}/models/index`);
 
 const alterDatabase = async (argv) => {
   argv = getArgv(argv);
