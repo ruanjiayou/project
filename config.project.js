@@ -1,5 +1,5 @@
 // 项目环境参数,每个项目改这里或者从gulp中传过来
-global.PORT = '8096';
+global.PORT = '8091';
 global.NODE_ENV = 'dev';
 
 // 环境变量
@@ -18,7 +18,6 @@ require('./config.default');
 
 // 项目单独参数
 define('PROJECT_NAME', 'utils-web');
-define('PORT', '8091');
 define('UI_SITE', 'http://180.76.183.201:2017');
 
 // 鉴权
