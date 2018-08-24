@@ -1,4 +1,5 @@
 const gulp = require('gulp');
+const babel = require('gulp-babel');
 const apidoc = require('gulp-apidoc');
 const uglify = require('gulp-uglify');
 const pump = require('pump');
@@ -35,17 +36,21 @@ gulp.task('doc', (done) => {
 });
 
 /**
- * TODO:生成代码
+ * 生成代码
  */
-gulp.task('dist', async () => {
+gulp.task('dist', async (cb) => {
+  await gulp
+    .src('./src/**/*.html')
+    .pipe(gulp.dest('./dist'));
   pump([
-    gulp.src('src'),
+    gulp.src('./src/**/*.js'),
+    babel(),
     uglify(),
-    gulp.dest('dist')
-  ])
+    gulp.dest('./dist')
+  ]);
 });
 
-function develop(mode) {
+function develop(mode, port, project_name) {
   const stream = nodemon({
     script: 'launch.js',
     watch: ['src', 'launch.js', 'gulpfile.js'],
@@ -53,7 +58,7 @@ function develop(mode) {
     delay: 3000,
     env: {
       NODE_ENV: mode,
-      PROJECT_NAME
+      PORT: port,
     }
   });
   stream
@@ -69,18 +74,67 @@ function develop(mode) {
       //process.exit(0);
     })
 }
-async function publish(mode) {
-  //TODO:
-  const pmList = pm2.list();
+async function publish(mode, port, project_name) {
+  // pm2项目列表
+  const projects = await new Promise((resolve, reject) => {
+    pm2.list(function (err, list) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(list);
+      }
+    });
+  });
+  // 查找实例是否启动
+  const instance = projects.find(item => {
+    return item.name === project_name;
+  });
+  // 删除
+  if (instance) {
+    await new Promise((resolve, reject) => {
+      pm2.delete(instance.pm_id, function (err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+  // 再启动
+  const result = await new Promise((resolve, reject) => {
+    pm2.connect(err => {
+      if (err) {
+        return reject(err);
+      }
+      pm2.start({
+        name: project_name,
+        script: './launch.js',
+        env: {
+          PORT: port,
+          NODE_ENV: mode
+        }
+      }, function (err, apps) {
+        if (err) {
+          return reject(err);
+        }
+        pm2.disconnect();
+        return resolve();
+      });
+    });
+  });
+  process.exit(2);
 }
 /**
  * 启动项目
  */
 gulp.task('dev', () => {
-  develop('dev');
+  require('./config.project');
+  develop('dev', PORT, PROJECT_NAME);
 });
-gulp.task('publish', () => {
-
+gulp.task('publish', ['doc'], () => {
+  require('./config.project');
+  publish('product', 3001 /* PORT */, PROJECT_NAME);
 });
 
 gulp.task('migration', () => {

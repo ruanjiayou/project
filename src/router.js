@@ -39,7 +39,7 @@ function adjustRoutes(arr) {
  * 处理路由文件
  * @param {object} info 路径信息
  */
-function handler(info) {
+function handler(info, type = 'API') {
   let route = require(info.fullpath);
   Object.keys(route).forEach(key => {
     // 转化为可以排序的对象
@@ -51,6 +51,15 @@ function handler(info) {
       handle: route[key]
     };
     routes.push(o);
+    if (type === 'route') {
+      DEFAULT_INDEX.forEach(index => {
+        routes.push({
+          type: o.type,
+          path: `${o.path}${index}`,
+          handle: route[key]
+        });
+      });
+    }
   });
 }
 /**
@@ -66,7 +75,9 @@ loader({
 loader({
   dir: APP_PATH + '/controller',
   recusive: true
-}, handler);
+}, (info) => {
+  handler(info, 'route');
+});
 
 module.exports = function (app) {
   // 排序
