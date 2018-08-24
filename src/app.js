@@ -81,7 +81,7 @@ app.use(function (req, res) {
     if (/^\/v\d+/.test(req.originalUrl)) {
       res.status(404).send('API不存在!');
     } else {
-      res.render('404');
+      res.redirect('/404.html');
     }
   }
 });

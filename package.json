@@ -9,10 +9,13 @@
   "author": "阮家友",
   "license": "ISC",
   "dependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
+    "gulp-babel": "^7.0.1",
     "helmet": "^3.13.0",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.10",

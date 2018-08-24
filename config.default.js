@@ -46,3 +46,6 @@ define('RES_PAGINATOR_PAGES', 'pages');
 define('RES_PAGINATOR_LIMIT', 'limit');
 define('RES_PAGINATOR_COUNT', 'count');
 define('RES_PAGINATOR_TOTAL', 'total');
+
+// 默认支持后缀
+define('DEFAULT_INDEX', ['.html', '.htm']);
