@@ -1,6 +1,6 @@
-// 项目环境参数,每个项目改这里或者从gulp中传过来,最好是改这里
-define('PORT', '3000');
-define('NODE_ENV', 'dev');
+// 项目环境参数,每个项目改这里或者从gulp中传过来
+global.PORT = '8096';
+global.NODE_ENV = 'dev';
 
 // 环境变量
 if (process.env.PORT === undefined) {
