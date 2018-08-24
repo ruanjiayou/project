@@ -3,3 +3,4 @@ node_modules/
 static/doc
 dev/
 dist/
+config.project.js
