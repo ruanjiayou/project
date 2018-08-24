@@ -1,5 +1,5 @@
 // 项目环境参数,每个项目改这里或者从gulp中传过来
-global.PORT = '8096';
+global.PORT = '3000';
 global.NODE_ENV = 'dev';
 
 // 环境变量
