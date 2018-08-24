@@ -4,7 +4,7 @@ global.define = function (key, value) {
 
 // 项目路径
 define('ROOT_PATH', __dirname);
-// 应用程序路径
+// 应用程序路径,固定写src,想根据NODE_ENV改也可以
 define('APP_PATH', `${ROOT_PATH}/src`);
 // 配置路径
 define('CONFIG_PATH', `${APP_PATH}/config`);

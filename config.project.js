@@ -1,5 +1,4 @@
-require('./config.default');
-// 项目默认环境参数
+// 项目环境参数,每个项目改这里或者从gulp中传过来,最好是改这里
 define('PORT', '3000');
 define('NODE_ENV', 'dev');
 
@@ -14,6 +13,8 @@ if (process.env.NODE_ENV === undefined) {
 } else {
   NODE_ENV = process.env.NODE_ENV;
 }
+
+require('./config.default');
 
 // 项目单独参数
 define('PROJECT_NAME', 'project');
