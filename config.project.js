@@ -1,7 +1,6 @@
-require('./config.default');
-// 项目默认环境参数
-define('PORT', '3000');
-define('NODE_ENV', 'dev');
+// 项目环境参数,每个项目改这里或者从gulp中传过来
+global.PORT = '8096';
+global.NODE_ENV = 'dev';
 
 // 环境变量
 if (process.env.PORT === undefined) {
@@ -14,6 +13,8 @@ if (process.env.NODE_ENV === undefined) {
 } else {
   NODE_ENV = process.env.NODE_ENV;
 }
+
+require('./config.default');
 
 // 项目单独参数
 define('PROJECT_NAME', 'utils-web');
