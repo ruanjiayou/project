@@ -54,7 +54,7 @@ class BaseBLL {
     opt.scopes = _.isArray(opts.scopes) ? opts.scopes : [];
     if (_.isNil(opts.where)) {
       opt.where = {};
-    } else if (_.isInteger(opts.where)) {
+    } else if (/^\d+$/.test(opts.where)) {
       opt.where = {};
       opt.where[this.model.primaryKeyAttribute] = opts.where;
     } else {
