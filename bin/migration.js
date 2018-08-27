@@ -5,10 +5,9 @@
  */
 const _ = require('lodash');
 const fs = require('fs');
-const models = require(`${MODEL_PATH}/index`);
 
 const alterDatabase = async (argv) => {
-  argv = getArgv(argv);
+  const models = require(`${MODEL_PATH}/index`);
   console.log('刷表前请确定已编译ts文件!');
   try {
     if (argv.force === true) {
@@ -34,6 +33,7 @@ const alterDatabase = async (argv) => {
     console.log('数据库表已修改成功!');
     process.exit();
   } catch (err) {
+    console.log(argv, '参数列表');
     console.log(err, '创建出错!');
   }
 }
@@ -93,4 +93,7 @@ function getArgv(argv) {
   });
   return res;
 }
-module.exports = alterDatabase;
+module.exports = {
+  alterDatabase,
+  getArgv
+};

@@ -138,10 +138,14 @@ gulp.task('publish', ['doc'], () => {
 });
 
 gulp.task('migration', () => {
-  process.env.NODE_ENV = 'dev';
-  require('./config.project');
   const migration = require('./bin/migration');
-  migration(process.argv);
+  // 处理命令行参数
+  const argv = migration.getArgv(process.argv);
+  // 设置环境变量
+  process.env.NODE_ENV = argv.mode === 'dev' ? 'dev' : 'product';
+  require('./config.project');
+  // 操作数据库表
+  migration.alterDatabase(argv);
 });
 
 gulp.task('default', ['dev']);
