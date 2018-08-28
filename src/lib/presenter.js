@@ -82,13 +82,13 @@ function reqPaging(cb) {
  * 返回对象
  */
 function returns(result, param) {
-  this.json(preReturn(result, param));
+  return preReturn(result, param);
 }
 /**
  * 处理分页
  */
 function resPaging(results, query) {
-  this.json(prePaging(results, query));
+  return prePaging(results, query);
 }
 /**
  * 返回成功
@@ -96,7 +96,7 @@ function resPaging(results, query) {
 function success() {
   const response = {};
   response[RES_STATUS] = RES_SUCCESS;
-  this.json(response);
+  return response;
 }
 /**
  * 返回失败
@@ -104,7 +104,7 @@ function success() {
 function fail() {
   const response = {};
   response[RES_STATUS] = RES_FAIL;
-  this.json(response);
+  return response;
 }
 /**
  * 处理错误
@@ -116,7 +116,7 @@ function error(err) {
   errInfo[RES_STATUS] = RES_FAIL;
   errInfo[RES_CODE] = errorJson.code || 400;
   errInfo[RES_ERROR] = errorJson.message;
-  return this.status(errorJson.statusCode).json(errInfo);
+  return errInfo;
 }
 
 module.exports = function (params) {

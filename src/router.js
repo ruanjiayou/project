@@ -84,9 +84,16 @@ module.exports = function (app) {
   routes = adjustRoutes(routes);
   // 挂载到app上
   routes.forEach((route) => {
-    app[route.type](route.path, function (req, res, next) {
+    app[route.type](route.path, async function (req, res, next) {
       try {
-        route.handle(req, res, next);
+        const result = await route.handle(req, res, next);
+        if (result === undefined || result === null) {
+          res.end();
+        } else if (typeof result === 'string') {
+          res.write(result);
+        } else {
+          res.json(result);
+        }
       } catch (e) {
         next(e);
       }
