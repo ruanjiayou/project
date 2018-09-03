@@ -129,12 +129,14 @@ async function publish(mode, port, project_name) {
  * 启动项目
  */
 gulp.task('dev', () => {
-  require('./config.project');
-  develop('dev', PORT, PROJECT_NAME);
+  require('./config.project')(function () {
+    develop('dev', PORT, PROJECT_NAME);
+  });
 });
 gulp.task('publish', ['doc'], () => {
-  require('./config.project');
-  publish('product', 3001 /* PORT */, PROJECT_NAME);
+  require('./config.project')(function () {
+    publish('product', PORT, PROJECT_NAME);
+  });
 });
 
 gulp.task('migration', () => {
@@ -143,9 +145,10 @@ gulp.task('migration', () => {
   const argv = migration.getArgv(process.argv);
   // 设置环境变量
   process.env.NODE_ENV = argv.mode === 'dev' ? 'dev' : 'product';
-  require('./config.project');
-  // 操作数据库表
-  migration.alterDatabase(argv);
+  require('./config.project')(function () {
+    // 操作数据库表
+    migration.alterDatabase(argv);
+  });
 });
 
 gulp.task('default', ['dev']);

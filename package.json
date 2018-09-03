@@ -26,7 +26,8 @@
     "nodemailer-smtp-transport": "^2.7.4",
     "pm2": "^3.0.3",
     "redis": "^2.8.0",
-    "sequelize": "^4.38.0"
+    "sequelize": "^4.38.0",
+    "validater-max": "^1.0.0"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
@@ -34,7 +35,6 @@
     "gulp-clean": "^0.4.0",
     "gulp-nodemon": "^2.2.1",
     "gulp-uglify": "^3.0.1",
-    "pump": "^3.0.0",
-    "validater-max": "^1.0.0"
+    "pump": "^3.0.0"
   }
 }

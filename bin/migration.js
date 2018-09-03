@@ -11,7 +11,12 @@ const alterDatabase = async (argv) => {
   console.log('刷表前请确定已编译ts文件!');
   try {
     if (argv.force === true) {
-      await models.sequelize.sync({ force: true });
+      //await models.sequelize.sync({ force: true });
+      for (let k in models) {
+        if (k !== 'Op' && k !== 'sequelize' && k !== 'Config') {
+          await models[k].sync({ force: true });
+        }
+      }
       // // 权限
       // await models.AdminMenu.seed();
       // // 角色

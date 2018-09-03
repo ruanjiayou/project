@@ -1,6 +1,7 @@
-// 项目环境参数,每个项目改这里或者从gulp中传过来
-global.PORT = '3000';
-global.NODE_ENV = 'dev';
+require('./config.default');
+// 项目默认环境参数
+define('PORT', '3000');
+define('NODE_ENV', 'dev');
 
 // 环境变量
 if (process.env.PORT === undefined) {
@@ -14,17 +15,9 @@ if (process.env.NODE_ENV === undefined) {
   NODE_ENV = process.env.NODE_ENV;
 }
 
-require('./config.default');
-
 // 项目单独参数
-define('PROJECT_NAME', 'project');
-// 可在此处覆盖PORT或default文件文件的配置
-
-// 鉴权
-define('AUTH_KEY', 'token');  // 鉴权字段
-define('AUTH_SECRET', '');    // 鉴权密匙
-define('AUTH_SALT', '');      // 鉴权随机盐
-define('AUTH_EXP', 24 * 3600);// 鉴权有效期
+define('PROJECT_NAME', 'utils-web');
+define('UI_SITE', 'http://180.76.183.201:2017');
 
 // 数据库
 define('MYSQL_DEV_USER', 'root');
@@ -39,16 +32,21 @@ define('MYSQL_PRODUCT_HOST', '127.0.0.1');
 define('MYSQL_PRODUCT_PORT', '3306');
 define('MYSQL_PRODUCT_DB', 'test');
 
-// email
-define('EMAIL_HOST', 'smtp.qq.com');
-define('EMAIL_PORT', 465);
-define('EMAIL_AUTH_USER', '1439120442@qq.com');// 账号
-define('EMAIL_AUTH_PASS', '');// 授权码
-
-// i18n
-
-// queue
-
-// sms
-define('SMS_APPID', '');
-define('SMS_APPKEY', '');
+// 从数据库中拉取配置,定义全局常量
+module.exports = async function (cb) {
+  const models = require(MODEL_PATH + '/index');
+  const configs = await models.Config.findAll();
+  configs.forEach(function (item) {
+    let v = item.value;
+    item = item.toJSON();
+    switch (item.type) {
+      case 'int': v = parseInt(v); break;
+      case 'string': break;
+      default: v = JSON.parse(v); break;
+    }
+    define(item.name, v);
+  });
+  if (cb) {
+    cb();
+  }
+};
