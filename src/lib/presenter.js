@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const Hinter = require(LIB_PATH + '/Hinter');
 const errorsJson = require(ERROR_PATH);
 
 /**
@@ -30,7 +31,7 @@ function prePaging(result, query) {
  * @param {object} [params] 可选参数
  * @returns status/result
  */
-function preReturn(result, params) {
+function preReturn(result, params = {}) {
   if (!_.isNil(result)) {
     if (_.isArray(result)) {
       result = result.map(item => { return item.toJSON ? item.toJSON() : item; });
@@ -39,7 +40,7 @@ function preReturn(result, params) {
     }
   }
   const response = {};
-  response[RES_STATUS] = result === null ? RES_FAIL : RES_SUCCESS;
+  response[RES_STATUS] = _.isNil(result) ? RES_FAIL : RES_SUCCESS;
   response[RES_DATA] = result;
   return _.assign(response, params);
 }
@@ -75,35 +76,49 @@ function reqPaging(cb) {
   if (cb && typeof cb === 'function') {
     hql = cb(hql, query);
   }
+  this.paginator = _.clone(hql);
   return hql;
 }
 
-/**
- * 返回对象
- */
-function returns(result, param) {
-  return preReturn(result, param);
-}
 /**
  * 处理分页
  */
 function resPaging(results, query) {
   return prePaging(results, query);
 }
+
+/**
+ * 对返回的数据的统一封装处理
+ * @param {object} result 
+ */
+function returnHandle(res, result) {
+  if (result === undefined || result === null) {
+    res.end();
+  } else if (typeof result === 'string') {
+    res.write(result);
+    res.end();
+  } else if (!_.isNil(res.paginator)) {
+    res.json(res.paging(result, res.paginator));
+  } else {
+    res.json(result);
+  }
+}
+
 /**
  * 返回成功
  */
 function success() {
-  const response = {};
-  response[RES_STATUS] = RES_SUCCESS;
-  return response;
+  return preReturn({});
 }
 /**
  * 返回失败
  */
-function fail() {
+function fail(data) {
   const response = {};
   response[RES_STATUS] = RES_FAIL;
+  if (data) {
+    response[RES_DATA] = data;
+  }
   return response;
 }
 /**
@@ -119,14 +134,41 @@ function error(err) {
   return errInfo;
 }
 
-module.exports = function (params) {
-  return (req, res, next) => {
-    req.paging = reqPaging;
-    res.return = returns;
-    res.paging = resPaging;
-    res.success = success;
-    res.fail = fail;
-    res.error = error;
-    next();
-  };
+function preError(err) {
+  if (err instanceof Hinter) {
+    // 语言包验证-模块验证 ['zh-cn']['common']['notFound]
+    const errorJson = errorsJson[this.locale || d.defaultLang][err.module][err.type];
+    const errInfo = {};
+    errInfo[RES_STATUS] = RES_FAIL;
+    errInfo[RES_CODE] = errorJson.code || 400;
+    errInfo[RES_ERROR] = errorJson.message;
+    return errInfo;
+  } else if (err) {
+    const result = {};
+    result[RES_STATUS] = RES_FAIL;
+    result[RES_ERROR] = `${err.message}`;
+    return result;
+  } else {
+    return undefined;
+  }
 }
+
+/**
+ * req->paging ==> res.preReturn/rs.prePaging ==> res.success/res.fail/res.return/res.paging ==> res.returnHandle ==> res.error
+ */
+module.exports = {
+  preError,
+  returnHandle,
+  preReturn,
+  presenter: (params) => {
+    return (req, res, next) => {
+      req.paging = reqPaging;
+      res.return = preReturn;
+      res.paging = resPaging;
+      res.success = success;
+      res.fail = fail;
+      res.error = error;
+      next();
+    };
+  }
+};

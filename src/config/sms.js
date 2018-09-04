@@ -1,4 +1,4 @@
 module.exports = {
-  appId: '',
-  appKey: ''
+  appId: SMS_APPID,
+  appKey: SMS_APPKEY
 };

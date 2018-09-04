@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const path = require('path');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -32,6 +31,8 @@ app.use(require(LIB_PATH + '/uploadHelper'));
 // 自动清理文件...日
 //app.use(multerAutoReap);
 
+app.use(require(LIB_PATH + '/cors'));
+
 // .全局变量
 app.use(function (req, res, next) {
   //TODO:
@@ -41,7 +42,7 @@ app.use(function (req, res, next) {
 
 // .添加自定义响应方法(自动处理json:status与result).
 const presenter = require(LIB_PATH + '/presenter');
-app.use(presenter({
+app.use(presenter.presenter({
   page: REQ_PAGE,
   limit: REQ_LIMIT,
   search: REQ_SEARCH,
@@ -52,23 +53,13 @@ app.use(presenter({
 require('./router')(app);
 
 // .error异常处理
-const Hinter = require(LIB_PATH + '/Hinter');
 app.use(function (err, req, res, next) {
   console.log(err);
-  if (err instanceof Hinter) {
-    // 自定义错误
-    res.error(err);
-  } else if (err.validate) {
-    // // 验证错误
-    // res.validateError(err.validate);
-  }
-  else if (err) {
-    const result = {};
-    result[RES_STATUS] = RES_FAIL;
-    result[RES_ERROR] = `${err.message}`;
-    res.status(500).json(result);
-  } else {
+  const result = presenter.preError(err);
+  if (undefined === result) {
     next();
+  } else {
+    res.json(result);
   }
 });
 

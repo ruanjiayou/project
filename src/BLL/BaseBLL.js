@@ -47,6 +47,12 @@ class BaseBLL {
     const opt = {};
     // 允许多次调用_init()
     opts = _.cloneDeep(opts);
+    if (/^\d+$/.test(opts.limit)) {
+      opt.limit = opts.limit;
+    }
+    if (/^\d+$/.test(opts.page)) {
+      opt.offset = (opts.page - 1) * opt.limit;
+    }
     opt.transaction = _.isNil(opts.t) ? null : opts.t;
     if (opts.transaction) {
       opt.transaction = opts.transaction;

@@ -1,6 +1,6 @@
-const path = require('path');
-const fs = require('fs');
+const _ = require('lodash');
 const loader = require(LIB_PATH + '/loader');
+const presenter = require(LIB_PATH + '/presenter');
 let routes = [];
 
 /**
@@ -85,17 +85,59 @@ module.exports = function (app) {
   // 挂载到app上
   routes.forEach((route) => {
     app[route.type](route.path, async function (req, res, next) {
-      try {
-        const result = await route.handle(req, res, next);
-        if (result === undefined || result === null) {
-          res.end();
-        } else if (typeof result === 'string') {
-          res.write(result);
-        } else {
-          res.json(result);
+      // 组合API特定格式
+      if (req.headers['x-api'] === 'group' && req.method === 'POST' && req.originalUrl === '/v1/api-group') {
+        const results = [];
+        const apis = req.body;
+        // 处理组合API数组
+        for (let i = 0; i < apis.length; i++) {
+          const api = apis[i];
+          // 防止循环错误
+          if (api.url === '/v1/api-group') {
+            results.push(res.error({ module: 'common', type: 'recursive' }));
+            continue;
+          }
+          let found = false, err = undefined;
+          //与所有路由匹配
+          for (let j = 0; j < routes.length; j++) {
+            const R = routes[j];
+            req.method = api.method;
+            req.originalUrl = api.url;
+            req.query = api.query;
+            req.body = api.body;
+            req.params = {};
+            // TODO:reg-path匹配 var pathRegexp = require('path-to-regexp');
+            if (R.path !== api.url) {
+              continue;
+            }
+            if (R.type === 'use' || R.type === api.method) {
+              try {
+                if (R.type === 'use') {
+                  //R.handle(req, res, function (e) { });
+                } else {
+                  // 匹配跳出或错误跳出
+                  found = true;
+                  results.push(R.handle(req, res, function (e) { }));
+                  break;
+                }
+              } catch (e) {
+                results.push(res.error(e));
+              }
+            }
+          }
+          if (!found) {
+            results.push(res.error({ module: 'common', type: '404' }));
+          }
         }
-      } catch (e) {
-        next(e);
+        presenter.returnHandle(res, results);
+      } else {
+        // 普通API
+        try {
+          const result = await route.handle(req, res, next);
+          presenter.returnHandle(res, result);
+        } catch (e) {
+          next(e);
+        }
       }
     });
   });

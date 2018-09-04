@@ -2,6 +2,13 @@ const fs = require('fs');
 
 module.exports = {
   /**
+   * @api {get} /test/check-project 0.检查项目的必要条件是否满足
+   * @apiGroup test-check-project
+   */
+  'get /test/check-project': async (req, res, next) => {
+    return '1.检查全局变量;2.检查必要初始数据;3.'
+  },
+  /**
    * @api {get} /test/string 1.测试返回字符串
    * @apiGroup test-string
    * 
@@ -79,10 +86,32 @@ module.exports = {
     res.fail();
   },
   /**
-   * @api {get} /test/res-error 7.测试res添加error()方法
+   * @api {get} /test/res-error 10.测试res添加error()方法
    * @apiGroup test-res-error
    */
   'get /test/res-error': (req, res, next) => {
     throw new Error('test');
+  },
+  /**
+   * @api {put} /test/api-put 11.测试put请求和组合API,原样返回数据
+   * @apiGroup test-put
+   */
+  'put /test/put': (req, res, next) => {
+    return req.body;
+  },
+  /**
+   * @api {get} /test/get 12.测试get请求返回字符串以及组合API
+   * @apiGroup test-get
+   */
+  'get /test/get': (req, res, next) => {
+    return 'test-api-group-string';
+  },
+  /**
+   * @api {post} /v1/api-group 13.测试组合API
+   * @apiGroup test-api-group
+   * @apiDescription 'post /v1/api-group',req.body.apis是数组,每项有type/url/body/query/params
+   */
+  'post /v1/api-group': async (req, res, next) => {
+    return 'api-group';
   }
 };
