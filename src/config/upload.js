@@ -4,5 +4,5 @@ module.exports = {
     fileSize: 1024 * 1024 * 3,
     fields: 100
   },
-  dest: ROOT_PATH + '.tmp'
+  tmp: ROOT_PATH + '/.tmp'
 };

@@ -45,11 +45,30 @@ function preReturn(result, params = {}) {
   return _.assign(response, params);
 }
 
+function preError(err) {
+  if (err instanceof Hinter) {
+    // 语言包验证-模块验证 ['zh-cn']['common']['notFound]
+    const errorJson = errorsJson[this.locale || d.defaultLang][err.module][err.type];
+    const errInfo = {};
+    errInfo[RES_STATUS] = RES_FAIL;
+    errInfo[RES_CODE] = errorJson.code || 400;
+    errInfo[RES_ERROR] = errorJson.message;
+    return errInfo;
+  } else if (err) {
+    const result = {};
+    result[RES_STATUS] = RES_FAIL;
+    result[RES_ERROR] = `${err.message}`;
+    return result;
+  } else {
+    return undefined;
+  }
+}
+
 /**
  * 查询前计算limit和offset, 将req.query分为 hql和query
  * @returns page/limit/offset/where/search/order
  */
-function reqPaging(cb) {
+function paging(cb) {
   let hql = { where: {} };
   const query = this.query;
 
@@ -81,30 +100,6 @@ function reqPaging(cb) {
 }
 
 /**
- * 处理分页
- */
-function resPaging(results, query) {
-  return prePaging(results, query);
-}
-
-/**
- * 对返回的数据的统一封装处理
- * @param {object} result 
- */
-function returnHandle(res, result) {
-  if (result === undefined || result === null) {
-    res.end();
-  } else if (typeof result === 'string') {
-    res.write(result);
-    res.end();
-  } else if (!_.isNil(res.paginator)) {
-    res.json(res.paging(result, res.paginator));
-  } else {
-    res.json(result);
-  }
-}
-
-/**
  * 返回成功
  */
 function success() {
@@ -121,54 +116,35 @@ function fail(data) {
   }
   return response;
 }
-/**
- * 处理错误
- */
-function error(err) {
-  // 语言包验证-模块验证 ['zh-cn']['common']['notFound]
-  const errorJson = errorsJson[this.locale || d.defaultLang][err.module][err.type];
-  const errInfo = {};
-  errInfo[RES_STATUS] = RES_FAIL;
-  errInfo[RES_CODE] = errorJson.code || 400;
-  errInfo[RES_ERROR] = errorJson.message;
-  return errInfo;
-}
 
-function preError(err) {
-  if (err instanceof Hinter) {
-    // 语言包验证-模块验证 ['zh-cn']['common']['notFound]
-    const errorJson = errorsJson[this.locale || d.defaultLang][err.module][err.type];
-    const errInfo = {};
-    errInfo[RES_STATUS] = RES_FAIL;
-    errInfo[RES_CODE] = errorJson.code || 400;
-    errInfo[RES_ERROR] = errorJson.message;
-    return errInfo;
-  } else if (err) {
-    const result = {};
-    result[RES_STATUS] = RES_FAIL;
-    result[RES_ERROR] = `${err.message}`;
-    return result;
+/**
+ * 对返回的数据的统一封装处理
+ */
+function formatResponse(result) {
+  if (result === undefined || result === null) {
+    this.end();
+  } else if (typeof result === 'string') {
+    this.write(result);
+    this.end();
+  } else if (!_.isNil(this.paginator)) {
+    this.json(this.paging(result, this.paginator));
   } else {
-    return undefined;
+    res.json(result);
   }
 }
 
-/**
- * req->paging ==> res.preReturn/rs.prePaging ==> res.success/res.fail/res.return/res.paging ==> res.returnHandle ==> res.error
- */
 module.exports = {
-  preError,
-  returnHandle,
+  // 处理请求条件
+  paging,
+  // 预处理返回的分页
+  prePaging,
+  // 预处理返回的对象
   preReturn,
-  presenter: (params) => {
-    return (req, res, next) => {
-      req.paging = reqPaging;
-      res.return = preReturn;
-      res.paging = resPaging;
-      res.success = success;
-      res.fail = fail;
-      res.error = error;
-      next();
-    };
-  }
+  // 预处理返回的错误
+  preError,
+  // 简便方法 success和fail
+  success,
+  fail,
+  // 服务器输出响应: string/object/直接结束(options)
+  formatResponse
 };

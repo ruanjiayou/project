@@ -3,6 +3,7 @@ const app = express();
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const compression = require('compression');
 const ejs = require('ejs');
 
 // .设置express模板引擎
@@ -17,37 +18,49 @@ app.use(helmet());
 // .静态目录
 app.use(express.static(STATIC_PATH));
 
+// .请求限制的处理
+const uploadCfg = require(CONFIG_PATH + '/upload');
+app.use(express.json({ limit: uploadCfg.limits.fileSize }));
+app.use(compression());
+
 // .解析请求
 app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: uploadCfg.limits.fileSize }));
+app.use(bodyParser.urlencoded({ limit: uploadCfg.limits.fileSize, extended: true }));
 
 // .国际化
 app.use(require(LIB_PATH + '/i18nHelper'));
 
-// .文件处理中间件
-app.use(require(LIB_PATH + '/uploadHelper'));
-
 // 自动清理文件...日
 //app.use(multerAutoReap);
 
+// .跨域处理
 app.use(require(LIB_PATH + '/cors'));
 
-// .全局变量
+// .form文件解析
+app.use(require(LIB_PATH + '/fileParser'));
+
+const presenter = require(LIB_PATH + '/presenter');
+const uploadHelper = require(LIB_PATH + '/uploadHelper');
+// .添加自定义方法
 app.use(function (req, res, next) {
-  //TODO:
-  //res.locals.sys = {};
+  // .上传文件
+  req.upload = uploadHelper;
+
+  // .请求与响应
+  req.paging = presenter.paging;
+  res.return = presenter.preReturn;
+  res.paging = presenter.prePaging;
+  res.error = presenter.preError;
+  res.success = presenter.success;
+  res.fail = presenter.fail;
+  res.formatResponse = presenter.formatResponse;
+
+  // .全局变量
+  res.locals.sys = C_SYSTEM;
+
   next();
 });
-
-// .添加自定义响应方法(自动处理json:status与result).
-const presenter = require(LIB_PATH + '/presenter');
-app.use(presenter.presenter({
-  page: REQ_PAGE,
-  limit: REQ_LIMIT,
-  search: REQ_SEARCH,
-  order: REQ_ORDER,
-}));
 
 // .路由,含token验证
 require('./router')(app);
@@ -55,7 +68,7 @@ require('./router')(app);
 // .error异常处理
 app.use(function (err, req, res, next) {
   console.log(err);
-  const result = presenter.preError(err);
+  const result = res.error(err);
   if (undefined === result) {
     next();
   } else {

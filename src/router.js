@@ -129,12 +129,12 @@ module.exports = function (app) {
             results.push(res.error({ module: 'common', type: '404' }));
           }
         }
-        presenter.returnHandle(res, results);
+        res.formatResponse(results);
       } else {
         // 普通API
         try {
           const result = await route.handle(req, res, next);
-          presenter.returnHandle(res, result);
+          res.formatResponse(result);
         } catch (e) {
           next(e);
         }

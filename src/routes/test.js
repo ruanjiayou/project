@@ -113,5 +113,14 @@ module.exports = {
    */
   'post /v1/api-group': async (req, res, next) => {
     return 'api-group';
+  },
+  /**
+   * @api {post} /v1/test-upload 14.本地上传
+   * @apiGroup test-upload
+   */
+  'post /test-upload': async (req, res, next) => {
+    let urls = req.upload('test', 'test/{Y}-{m}-{d}/{hh}{ii}{ss}-{6}');
+    console.log(urls);
+    return '测试上传(看控制台)';
   }
 };
