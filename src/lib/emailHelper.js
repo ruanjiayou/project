@@ -1,14 +1,19 @@
 const _ = require('lodash');
-const emailCfg = require(CONFIG_PATH + '/email');
-const fs = require('fs');
-const path = require('path');
-
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
 const debug = require('debug')('APP:email');
 
 // 开启一个SMTP连接池
-const transport = nodemailer.createTransport(smtpTransport({ emailCfg }));
+const transport = nodemailer.createTransport(smtpTransport({
+  secure: true,// 使用SSL
+  secureConnection: true,// 使用SSL
+  host: EMAIL_HOST,
+  port: EMAIL_PORT,
+  auth: {
+    user: EMAIL_AUTH_USER,
+    pass: EMAIL_AUTH_PASS
+  }
+}));
 
 function render(filename, data) {
   //TODO: 模板渲染_
@@ -19,7 +24,7 @@ async function sendMail(users, subject, html) {
   // 设置邮件内容
   const options = {
     //TODO:
-    from: '',
+    from: EMAIL_AUTH_USER,
     subject,
     html
   };
@@ -30,9 +35,9 @@ async function sendMail(users, subject, html) {
       to: `${user.name} <${user.email}>`
     }), function (error, res) {
       if (error) {
-        debug(error);
+        console.log(error);
       } else {
-        debug(res);
+        console.log(res);
       }
     });
   }

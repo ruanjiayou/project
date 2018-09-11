@@ -205,5 +205,19 @@ module.exports = {
     delete data.secret;
     const result = await smsHelper.send(info, data);
     return result;
+  },
+  /**
+   * @api {post} /test/qq-email 发送qq邮件
+   * @apiGroup test-email
+   * @apiParam {string} name
+   * @apiParam {string} email
+   * @apiParam {string} subject
+   * @apiParam {string} html
+   */
+  'post /test/qq-email': async (req, res, next) => {
+    const emailHelper = require(LIB_PATH + '/emailHelper');
+    const data = req.body;
+    await emailHelper.sendMail([{ name: data.name, email: data.email }], data.subject, data.html);
+    return;
   }
 };
