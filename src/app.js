@@ -40,12 +40,14 @@ app.use(require(LIB_PATH + '/cors'));
 // .form文件解析
 app.use(require(LIB_PATH + '/fileParser'));
 
+const storager = require(LIB_PATH + '/storager');
 const presenter = require(LIB_PATH + '/presenter');
-const uploadHelper = require(LIB_PATH + '/uploadHelper');
 // .添加自定义方法
 app.use(function (req, res, next) {
   // .上传文件
-  req.upload = uploadHelper;
+  req.upload = function (field, format) {
+    storager.create(this.files, field, format);
+  };
 
   // .请求与响应
   req.paging = presenter.paging;

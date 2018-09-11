@@ -1,18 +1,7 @@
 
 class Cos {
-  static async getBuckets() {
-    return new Promise(function (resolve, reject) {
-      cos.getService(null, (err, data) => {
-        if (err) {
-          resolve(null);
-        } else {
-          resolve(data);
-        }
-      })
-    });
-  }
-
-  static async uploadFile(opt, file) {
+  //TODO: promise.all
+  static async create(opt, file) {
     const res = await new Promise(function (resolve, reject) {
       cos.putObject({
         Bucket: `${opt.bucket}-${appid}`,
@@ -37,7 +26,7 @@ class Cos {
    * @param {string} bucket 
    * @param {string} filepath 
    */
-  static deleteFile(appid, region, bucket, filepath) {
+  static destroy(appid, region, bucket, filepath) {
     Cos.deleteObject({
       Bucket: `${bucket}-${appid}`,
       Region: region,
@@ -48,6 +37,4 @@ class Cos {
   }
 }
 
-module.exports = function (files, format) {
-
-};
+module.exports = Cos;

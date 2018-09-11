@@ -1,4 +1,5 @@
 const fs = require('fs');
+const wxHelper = require(LIB_PATH + '/wxHelper');
 
 module.exports = {
   /**
@@ -122,5 +123,87 @@ module.exports = {
     let urls = req.upload('test', 'test/{Y}-{m}-{d}/{hh}{ii}{ss}-{6}');
     console.log(urls);
     return '测试上传(看控制台)';
+  },
+  /**
+   * @api {post} /test/wx-info 获取微信信息
+   * @apiGroup test-wx
+   * @apiParam {string} appid
+   * @apiParam {string} secret
+   * @apiParam {string} code
+   */
+  'post /test/wx-info': async (req, res, next) => {
+    const result = await wxHelper.getWxmInfo(req.body.appid, req.body.secret, req.body.code);
+    return result;
+  },
+  /**
+   * @api {post} /test/wx-access-token 获取凭证
+   * @apiGroup test-wx
+   * @apiParam {string} appid
+   * @apiParam {string} secret
+   */
+  'post /test/wx-access-token': async (req, res, next) => {
+    const accessToken = await wxHelper.getAccessToken(req.body.appid, req.body.secret);
+    return accessToken;
+  },
+  /**
+   * @api {post} /test/wx-phone 获取微信手机号
+   * @apiGroup test-wx
+   * @apiParam {string} appid
+   * @apiParam {string} secret
+   * @apiParam {string} code
+   * @apiParam {string} encryptedData
+   * @apiParam {string} iv
+   */
+  'post /test/wx-phone': async (req, res, next) => {
+    const info = await wxHelper.getWxmPhone(
+      req.body.appid,
+      req.body.secret,
+      req.body.code,
+      req.body.encryptedData,
+      req.body.iv);
+    return info;
+  },
+  /**
+   * @api {post} /test/wx-sms 发送腾讯云短信
+   * @apiGroup test-sms
+   * @apiParam {string} [appid] 应用id
+   * @apiParam {string} [secret] 应用密匙
+   * @apiParam {string} [county=86] 国家代码
+   * @apiParam {string} phone 手机号
+   * @apiParam {string} sign 短信签名
+   * @apiParam {int} tplId 短信模板Id
+   */
+  'post /test/wx-sms': async (req, res, next) => {
+    const data = req.body;
+    const SmsHelper = require(LIB_PATH + '/smsStrategy/tenxun');
+    const smsHelper = new SmsHelper(data.appid, data.appkey);
+    const result = await smsHelper.send(data, ['123456', '10']);
+    return result;
+  },
+  /**
+   * @api {post} /test/ali-sms 发送阿里云短信
+   * @apiGroup test-sms
+   * @apiParam {string} appid id
+   * @apiParam {string} secret 密匙
+   * @apiParam {string} phone 手机号
+   * @apiParam {string} sign 短信签名
+   * @apiParam {int} tplId 短信模板Id
+   */
+  'post /test/ali-sms': async (req, res, next) => {
+    const data = req.body;
+    const SmsHelper = require(LIB_PATH + '/smsStrategy/ali');
+    const smsHelper = new SmsHelper(data.appid, data.secret);
+    const info = {
+      phone: data.phone,
+      sign: data.sign,
+      tplId: data.tplId
+    };
+    delete data.phone;
+    delete data.sign;
+    delete data.tplId;
+    delete data.appid;
+    delete data.secret;
+    const result = await smsHelper.send(info, data);
+    return result;
   }
 };

@@ -108,7 +108,7 @@ class IO {
     if (len < 6) {
       len = 6;
     }
-    for (let i = 0, l = chs.length; i < len; i++) {
+    for (let i = 0, l = chs.length - 1; i < len; i++) {
       let ran = Math.round(Math.random() * l);
       res += chs[ran];
     }

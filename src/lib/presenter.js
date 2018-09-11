@@ -129,7 +129,7 @@ function formatResponse(result) {
   } else if (!_.isNil(this.paginator)) {
     this.json(this.paging(result, this.paginator));
   } else {
-    res.json(result);
+    this.json(result);
   }
 }
 

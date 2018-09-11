@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const rp = require('request-promise');
 const request = require('request');
 
-// TODO: 1.获取openid 2.获取unionid 3.获取手机号 4.获取access_token 5.获取二维码 6.统一下单 7.发送消息
+// TODO: 5.获取二维码 6.统一下单 7.发送消息
 class wxHelper {
   // this.updatedAt = null;
   // this.accessToken = null;
@@ -35,13 +35,13 @@ class wxHelper {
   }
 
   /**
-   * 获取openid
+   * 获取openid/unionid/sessionKey
    * @param {string} appid 
    * @param {string} secret 
    * @param {string} code 
    */
-  static async getOpenId(appid, secret, code) {
-    let wxInfo = await rp({
+  static async getWxmInfo(appid, secret, code) {
+    const wxmInfo = await rp({
       uri: `https://api.weixin.qq.com/sns/jscode2session?`,
       qs: {
         appid: appid,
@@ -52,12 +52,7 @@ class wxHelper {
       method: 'GET',
       json: true
     });
-    return wxInfo;
-  }
-
-  // TODO:
-  static getUnionId() {
-
+    return wxmInfo;
   }
 
   /**
@@ -66,8 +61,12 @@ class wxHelper {
    * @param {string} encryptedData 加密数据
    * @param {string} iv 加密向量
    */
-  static getPhoneInfo(sessionKey, encryptedData, iv) {
-    const sessionKeyBuf = new Buffer(sessionKey, "base64");
+  static async getWxmPhone(appid, secret, code, encryptedData, iv) {
+    const wxInfo = await wxHelper.getWxmInfo(appid, secret, code);
+    if (wxInfo.errcode) {
+      return wxInfo;
+    }
+    const sessionKeyBuf = new Buffer(wxInfo.session_key, "base64");
     const encryptedDataBuf = new Buffer(encryptedData, "base64");
     const ivBuf = new Buffer(iv, "base64");
     let decoded = '';
@@ -87,7 +86,7 @@ class wxHelper {
    * @param {int} page 
    * @param {int} offset 
    */
-  static getNotifyTpl(accessToken, page = 1, offset = 20) {
+  static async getNotifyTpl(accessToken, page = 1, offset = 20) {
     const notifies = await rp({
       url: 'https://api.weixin.qq.com/cgi-bin/wxopen/template/list',
       qs: {
@@ -105,7 +104,7 @@ class wxHelper {
    * @param {object} opt 
    * @param {array} dataArr 
    */
-  static sendNotifyTpl(opt, dataArr) {
+  static async sendNotifyTpl(opt, dataArr) {
     const tplData = {
       access_token: opt.accessToken,
       touser: opt.openid,
