@@ -45,8 +45,8 @@ const presenter = require(LIB_PATH + '/presenter');
 // .添加自定义方法
 app.use(function (req, res, next) {
   // .上传文件
-  req.upload = function (field, format) {
-    storager.create(this.files, field, format);
+  req.upload = async function (format) {
+    return storager.create(this.files, format);
   };
 
   // .请求与响应

@@ -3,25 +3,26 @@ const aliStorage = require('./storageStrategy/ali');
 const tenxunStorage = require('./storageStrategy/tenxun');
 
 class Storager {
-  static create(files, field, format) {
+  static async create(files, format) {
     switch (C_UPLOAD_TYPE) {
       case 'tenxun':
-        return tenxunStorage.create(files, field, format);
+        return await new tenxunStorage(C_COS_TX_APPID, C_COS_TX_SECRETID, C_COS_TX_SECRETKEY, C_COS_TX_REGION, C_COS_TX_BUCKET).create(files, format);
       case 'ali':
-        return aliStorage.create(files, field, format);
+        return await new aliStorage(C_COS_ALI_APPID, C_COS_ALI_SECRET, C_COS_ALI_REGION, C_COS_ALI_BUCKET).create(files, format);
       default:
-        return localStorage.create(files, field, format);
+        return await localStorage.create(files, format);
     }
   }
-  static destroy(filepath) {
+  static async destroy(filepath) {
     switch (C_UPLOAD_TYPE) {
       case 'tenxun':
-        return tenxunStorage.destroy(filepath);
+        new tenxunStorage(C_COS_TX_APPID, C_COS_TX_SECRET, C_COS_TX_REGION, C_COS_TX_BUCKET).destroy(filepath);
       case 'ali':
-        return aliStorage.destroy(filepath);
+        aliStorage(C_COS_ALI_APPID, C_COS_ALI_SECRET, C_COS_ALI_REGION, C_COS_ALI_BUCKET).destroy(filepath);
       default:
-        return localStorage.destroy(filepath);
+        localStorage.destroy(filepath);
     }
+    return;
   }
 }
 

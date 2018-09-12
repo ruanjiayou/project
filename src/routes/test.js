@@ -116,13 +116,52 @@ module.exports = {
     return 'api-group';
   },
   /**
-   * @api {post} /v1/test-upload 14.本地上传
+   * @api {post} /test/local-upload-array 上传服务器返回数组
    * @apiGroup test-upload
    */
-  'post /test-upload': async (req, res, next) => {
-    let urls = req.upload('test', 'test/{Y}-{m}-{d}/{hh}{ii}{ss}-{6}');
-    console.log(urls);
-    return '测试上传(看控制台)';
+  'post /test/local-upload-array': async (req, res, next) => {
+    let urls = await req.upload('test/{Y}-{m}-{d}/{hh}{ii}{ss}-{6}');
+    return urls;
+  },
+  /**
+   * @api {post} /test/local-upload-object 上传服务器返回对象
+   * @apiGroup test-upload
+   */
+  'post /test/local-upload-object': async (req, res, next) => {
+    let urls = await req.upload({ 'test': 'test/{Y}-{m}-{d}/{hh}{ii}{ss}-{6}' });
+    return urls;
+  },
+  /**
+   * @api {post} /v1/test/ali-upload 阿里云对象存储
+   * @apiGroup test-upload
+   * @apiParam {string} appid
+   * @apiParam {string} secret
+   * @apiParam {string} region
+   * @apiParam {string} bucket
+   * @apiParam {file} images 图片数组
+   */
+  'post /test/ali-upload': async (req, res, next) => {
+    const Cos = require(LIB_PATH + '/storageStrategy/ali');
+    const data = req.body;
+    const result = await new Cos(data.appid, data.secret, data.region).create(req.files, 'vehicle-logo/images/{Y}-{m}-{d}/{hh}{ii}{ss}-{6}');
+    return result;
+  },
+  /**
+   * @api {post} /v1/test/wx-upload 腾讯云对象存储
+   * @apiGroup test-upload
+   * @apiParam {string} appid
+   * @apiParam {string} secretId
+   * @apiParam {string} secretKey
+   * @apiParam {string} region
+   * @apiParam {string} bucket
+   * @apiParam {file} images 图片数组
+   */
+  'post /test/wx-upload': async (req, res, next) => {
+    const Cos = require(LIB_PATH + '/storageStrategy/tenxun');
+    const data = req.body;
+    // console.log(req.files);
+    const result = await new Cos(data.appid, data.secretId, data.secretKey, data.region, data.bucket).create(req.files, 'vehicle-logo/{Y}-{m}-{d}/{hh}{ii}{ss}-{6}');
+    return result;
   },
   /**
    * @api {post} /test/wx-info 获取微信信息
