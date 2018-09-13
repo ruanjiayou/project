@@ -5,47 +5,47 @@ const request = require('request');
 
 // TODO: 5.获取二维码 6.统一下单 7.发送消息
 class wxHelper {
-  // this.updatedAt = null;
-  // this.accessToken = null;
+  constructor(wxAppId, wxSecret) {
+    this.wxAppId = wxAppId;
+    this.wxSecret = wxSecret;
+    this.updatedAt = null;
+    this.accessToken = null;
+  }
   /**
    * 获取授权
-   * @param {string} appId 
-   * @param {string} secret 
    */
-  static async getAccessToken(appId, secret) {
+  async getAccessToken() {
     const timestamp = new Date().getTime();
-    if (wxHelper.accessToken) {
-      if (timestamp - wxHelper.updatedAt <= 7000000) {
-        return wxHelper.accessToken;
+    if (this.accessToken) {
+      if (timestamp - this.updatedAt <= 7000000) {
+        return this.accessToken;
       }
     }
     const str = await rp({
       url: 'https://api.weixin.qq.com/cgi-bin/token',
       qs: {
         grant_type: 'client_credential',
-        appid: appId,
-        secret
+        appid: this.wxAppId,
+        secret: this.wxSecret
       },
       method: 'GET'
     });
     const res = JSON.parse(str);
-    wxHelper.updatedAt = timestamp;
-    wxHelper.accessToken = res.access_token;
-    return res;
+    this.updatedAt = timestamp;
+    this.accessToken = res.access_token;
+    return this.accessToken;
   }
 
   /**
    * 获取openid/unionid/sessionKey
-   * @param {string} appid 
-   * @param {string} secret 
    * @param {string} code 
    */
-  static async getWxmInfo(appid, secret, code) {
+  async getWxmInfo(code) {
     const wxmInfo = await rp({
       uri: `https://api.weixin.qq.com/sns/jscode2session?`,
       qs: {
-        appid: appid,
-        secret: secret,
+        appid: this.wxAppId,
+        secret: this.wxSecret,
         js_code: code,
         grant_type: 'authorization_code'
       },
@@ -61,8 +61,8 @@ class wxHelper {
    * @param {string} encryptedData 加密数据
    * @param {string} iv 加密向量
    */
-  static async getWxmPhone(appid, secret, code, encryptedData, iv) {
-    const wxInfo = await wxHelper.getWxmInfo(appid, secret, code);
+  static async getWxmPhone(code, encryptedData, iv) {
+    const wxInfo = await this.getWxmInfo(code);
     if (wxInfo.errcode) {
       return wxInfo;
     }
@@ -81,63 +81,12 @@ class wxHelper {
   }
 
   /**
-   * 获取账号下的模板消息列表
-   * @param {string} accessToken 
-   * @param {int} page 
-   * @param {int} offset 
+   * 生成小程序二维码
+   * @param {object} input
+   * @param {string='base64','stream'} [type='stream']
    */
-  static async getNotifyTpl(accessToken, page = 1, offset = 20) {
-    const notifies = await rp({
-      url: 'https://api.weixin.qq.com/cgi-bin/wxopen/template/list',
-      qs: {
-        access_token: accessToken,
-        offset: page,
-        count: offset
-      },
-      method: 'POST'
-    });
-    return notifies;
-  }
-
-  /**
-   * 发送消息
-   * @param {object} opt 
-   * @param {array} dataArr 
-   */
-  static async sendNotifyTpl(opt, dataArr) {
-    const tplData = {
-      access_token: opt.accessToken,
-      touser: opt.openid,
-      template_id: opt.tplId,
-      form_id: opt.formId,
-      data: ''
-    };
-    // 2.keywords
-    const keywords = {};
-    dataArr.forEach((item, index) => {
-      keywords[`keyword${index + 1}`] = { value: item, color: '#005397' };
-    });
-    tplData.data = keywords;
-    let access_token = tplData.access_token;
-    delete tplData.access_token;
-    // 3.发送请求
-    const res = await rp({
-      url: 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send',
-      qs: {
-        access_token: access_token
-      },
-      body: tplData,
-      json: true,
-      method: 'POST'
-    });
-    return res;
-  }
-
-  /**
-   * 获取小程序二维码
-   */
-  static async getWxMicroQrcode(appid, secret, input, type = 'url') {
-    const accessToken = await wxHelper.getAccessToken(appid, secret);
+  async getWxmQrcode(input, type = 'stream') {
+    const accessToken = await this.getAccessToken();
     if (type === 'stream') {
       return request({
         method: 'POST',
@@ -160,7 +109,7 @@ class wxHelper {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
       }).toUpperCase();
-      const fullpath = 'D:\\projects\\mall-template-ts\\static\\' + filename;
+      const fullpath = 'D:\\' + filename;
       await new Promise(function (resolve, reject) {
         // 文件流保存
         const ws = fs.createWriteStream(fullpath);
@@ -181,13 +130,67 @@ class wxHelper {
       }
     }
   }
+  /**
+   * 获取账号下的模板消息列表
+   * @param {int} page 
+   * @param {int} offset 
+   */
+  static async getNotifyTpl(page = 1, offset = 20) {
+    const accessToken = await this.getAccessToken();
+    const notifies = await rp({
+      url: 'https://api.weixin.qq.com/cgi-bin/wxopen/template/list',
+      qs: {
+        access_token: accessToken,
+        offset: page,
+        count: offset
+      },
+      method: 'POST'
+    });
+    return notifies;
+  }
+
+  /**
+   * 发送模板消息
+   * @param {string} openid 
+   * @param {string} tplId 
+   * @param {string} formId 
+   * @param {array} dataArr 
+   */
+  async sendNotifyTpl(openid, tplId, formId, dataArr) {
+    const accessToken = await this.getAccessToken();
+    const tplData = {
+      access_token: accessToken,
+      touser: openid,
+      template_id: tplId,
+      form_id: formId,
+      data: ''
+    };
+    // 2.keywords
+    const keywords = {};
+    dataArr.forEach((item, index) => {
+      keywords[`keyword${index + 1}`] = { value: item, color: '#005397' };
+    });
+    tplData.data = keywords;
+    // 3.发送请求
+    const res = await rp({
+      url: 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send',
+      qs: {
+        access_token: accessToken
+      },
+      body: tplData,
+      json: true,
+      method: 'POST'
+    });
+    return res;
+  }
 
   /**
    * 小程序统一下单
    * @param {string} key 
-   * @param {object} opt 
+   * @param {object} opt appid/openid/mch_id/body/out_trade_no/spbill_create_ip
    */
-  static async getMicroPreOrder(key, opt) {
+  async getMicroPreOrder(key, opt) {
+    opt.appid = this.wxAppId;
     return wxPayHelper.getPayOpt(key, opt);
   }
 

@@ -195,43 +195,57 @@ module.exports = {
     return result;
   },
   /**
-   * @api {post} /test/wx-info 获取微信信息
-   * @apiGroup test-wx
+   * @api {post} /test/wxm-info 获取小程序用户信息
+   * @apiGroup test-wxm
    * @apiParam {string} appid
    * @apiParam {string} secret
    * @apiParam {string} code
    */
-  'post /test/wx-info': async (req, res, next) => {
-    const result = await wxHelper.getWxmInfo(req.body.appid, req.body.secret, req.body.code);
+  'post /test/wxm-info': async (req, res, next) => {
+    const result = await new wxHelper(req.body.appid, req.body.secret).getWxmInfo(req.body.code);
     return result;
   },
   /**
-   * @api {post} /test/wx-access-token 获取凭证
-   * @apiGroup test-wx
+   * @api {post} /test/wxm-access-token 获取小程序凭证
+   * @apiGroup test-wxm
    * @apiParam {string} appid
    * @apiParam {string} secret
    */
-  'post /test/wx-access-token': async (req, res, next) => {
-    const accessToken = await wxHelper.getAccessToken(req.body.appid, req.body.secret);
+  'post /test/wxm-access-token': async (req, res, next) => {
+    const accessToken = await new wxHelper(req.body.appid, req.body.secret).getAccessToken();
     return accessToken;
   },
   /**
-   * @api {post} /test/wx-phone 获取微信手机号
-   * @apiGroup test-wx
+   * @api {post} /test/wxm-phone 获取小程序手机号
+   * @apiGroup test-wxm
    * @apiParam {string} appid
    * @apiParam {string} secret
    * @apiParam {string} code
    * @apiParam {string} encryptedData
    * @apiParam {string} iv
    */
-  'post /test/wx-phone': async (req, res, next) => {
-    const info = await wxHelper.getWxmPhone(
-      req.body.appid,
-      req.body.secret,
+  'post /test/wxm-phone': async (req, res, next) => {
+    const info = await new wxHelper(req.body.appid, req.body.secret).getWxmPhone(
       req.body.code,
       req.body.encryptedData,
       req.body.iv);
     return info;
+  },
+  /**
+   * @api {post} /test/wxm-qrcode 生成小程序二维码
+   * @apiGroup test-wxm
+   * @apiParam {string} appid
+   * @apiParam {string} secret
+   * @apiParam {string} scene
+   * @apiParam {string} page
+   * @apiParam {int} width
+   */
+  'post /test/wxm-qrcode': async (req, res, next) => {
+    return new wxHelper(req.body.appid, req.body.secret).getWxmRrcode({
+      'scene': req.body.scene,
+      'page': req.body.page,
+      'width': req.body.width
+    }, 'stream');
   },
   /**
    * @api {post} /test/wx-sms 发送腾讯云短信
