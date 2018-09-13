@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const Hinter = require(LIB_PATH + '/Hinter');
 const errorsJson = require(ERROR_PATH);
+const http = require('http');
 
 /**
  * 根据分页条件和查询结果构建分页信息
@@ -121,7 +122,7 @@ function fail(data) {
  * 对返回的数据的统一封装处理
  */
 function formatResponse(result) {
-  this.setHeader('Content-Type', 'application/json');
+  const isstream = result instanceof http.ServerResponse;
   if (result === undefined || result === null) {
     this.setHeader('Content-Type', 'text/html');
     this.end();
@@ -130,9 +131,13 @@ function formatResponse(result) {
     this.write(result);
     this.end();
   } else if (!_.isNil(this.paginator)) {
+    this.setHeader('Content-Type', 'application/json');
     this.json(this.paging(result, this.paginator));
-  } else {
+  } else if (!isstream) {
+    this.setHeader('Content-Type', 'application/json');
     this.json(result);
+  } else {
+    // stream
   }
 }
 

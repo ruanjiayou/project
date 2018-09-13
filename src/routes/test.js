@@ -195,14 +195,14 @@ module.exports = {
     return result;
   },
   /**
-   * @api {post} /test/wxm-info 获取小程序用户信息
+   * @api {post} /test/wxm-account 获取小程序用户标识
    * @apiGroup test-wxm
    * @apiParam {string} appid
    * @apiParam {string} secret
    * @apiParam {string} code
    */
-  'post /test/wxm-info': async (req, res, next) => {
-    const result = await new wxHelper(req.body.appid, req.body.secret).getWxmInfo(req.body.code);
+  'post /test/wxm-account': async (req, res, next) => {
+    const result = await new wxHelper(req.body.appid, req.body.secret).getWxmAccount(req.body.code);
     return result;
   },
   /**
@@ -216,7 +216,7 @@ module.exports = {
     return accessToken;
   },
   /**
-   * @api {post} /test/wxm-phone 获取小程序手机号
+   * @api {post} /test/wxm-phone 获取小程序手机号/头像/昵称
    * @apiGroup test-wxm
    * @apiParam {string} appid
    * @apiParam {string} secret
@@ -239,13 +239,23 @@ module.exports = {
    * @apiParam {string} scene
    * @apiParam {string} page
    * @apiParam {int} width
+   * @apiParam {string='stream','base64'} type stream
    */
   'post /test/wxm-qrcode': async (req, res, next) => {
-    return new wxHelper(req.body.appid, req.body.secret).getWxmRrcode({
-      'scene': req.body.scene,
-      'page': req.body.page,
-      'width': req.body.width
-    }, 'stream');
+    if (req.body.type === 'stream') {
+      const rs = await new wxHelper(req.body.appid, req.body.secret).getWxmQrcode({
+        'scene': req.body.scene,
+        'page': req.body.page,
+        'width': req.body.width
+      }, 'stream');
+      return rs.pipe(res);
+    } else {
+      return new wxHelper(req.body.appid, req.body.secret).getWxmQrcode({
+        'scene': req.body.scene,
+        'page': req.body.page,
+        'width': req.body.width
+      }, req.body.type);
+    }
   },
   /**
    * @api {post} /test/wx-sms 发送腾讯云短信

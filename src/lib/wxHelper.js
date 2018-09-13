@@ -1,9 +1,10 @@
 const _ = require('lodash');
+const fs = require('fs');
 const crypto = require('crypto');
 const rp = require('request-promise');
 const request = require('request');
 
-// TODO: 5.获取二维码 6.统一下单 7.发送消息
+// TODO: 二维码 6.统一下单 7.发送消息
 class wxHelper {
   constructor(wxAppId, wxSecret) {
     this.wxAppId = wxAppId;
@@ -40,7 +41,7 @@ class wxHelper {
    * 获取openid/unionid/sessionKey
    * @param {string} code 
    */
-  async getWxmInfo(code) {
+  async getWxmAccount(code) {
     const wxmInfo = await rp({
       uri: `https://api.weixin.qq.com/sns/jscode2session?`,
       qs: {
@@ -56,14 +57,21 @@ class wxHelper {
   }
 
   /**
-   * 获取手机号
+   * 获取用户信息,2018-9-13 23:21:28 现在不需要授权了
+   */
+  async getWxmUserInfo() {
+
+  }
+  /**
+   * 获取手机号/昵称和头像
    * @param {string} sessionKey 
    * @param {string} encryptedData 加密数据
    * @param {string} iv 加密向量
    */
-  static async getWxmPhone(code, encryptedData, iv) {
-    const wxInfo = await this.getWxmInfo(code);
-    if (wxInfo.errcode) {
+  async getWxmPhone(code, encryptedData, iv) {
+    const wxInfo = await this.getWxmAccount(code);
+    console.log(wxInfo);
+    if (!wxInfo || wxInfo.errcode) {
       return wxInfo;
     }
     const sessionKeyBuf = new Buffer(wxInfo.session_key, "base64");

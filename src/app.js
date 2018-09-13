@@ -74,6 +74,7 @@ app.use(function (err, req, res, next) {
   if (undefined === result) {
     next();
   } else {
+    res.setHeader('Content-Type', 'application/json');
     res.json(result);
   }
 });

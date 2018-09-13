@@ -19,6 +19,9 @@ module.exports = (sequelize, DataTypes) => {
     type: {
       type: DataTypes.ENUM('int', 'string', 'json', 'array'),
       allowNull: true
+    },
+    mark: {
+      type: DataTypes.STRING
     }
   }, {
       freezeTableName: false,

@@ -1,4 +1,3 @@
-const fs = require('fs');
 const mime = require('mime');
 const ioHelper = require('../ioHelper');
 const OSS = require('ali-oss');
