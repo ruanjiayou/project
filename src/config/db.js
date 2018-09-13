@@ -1,17 +1,17 @@
 module.exports = {
   dev: {
     //数据库登录名
-    username: MYSQL_DEV_USER,
+    username: MYSQL_DEV.USER,
     //数据库登录密码
-    password: MYSQL_DEV_PASS,
+    password: MYSQL_DEV.PASS,
     //数据库url地址
-    host: MYSQL_DEV_HOST,
+    host: MYSQL_DEV.HOST,
     //数据库url端口
-    port: MYSQL_DEV_PORT,
+    port: MYSQL_DEV.PORT,
     //数据库方言
     dialect: 'mysql',
     //数据库名
-    database: MYSQL_DEV_DB,
+    database: MYSQL_DEV.DB,
     session: {
       secret: 'session_cookie_name',
       key: 'session_cookie_secret',
@@ -30,17 +30,17 @@ module.exports = {
   },
   product: {
     //数据库登录名
-    username: MYSQL_PRODUCT_USER,
+    username: MYSQL_PRODUCT.USER,
     //数据库登录密码
-    password: MYSQL_PRODUCT_PASS,
+    password: MYSQL_PRODUCT.PASS,
     //数据库url地址
-    host: MYSQL_PRODUCT_HOST,
+    host: MYSQL_PRODUCT.HOST,
     //数据库url端口
-    port: MYSQL_PRODUCT_PORT,
+    port: MYSQL_PRODUCT.PORT,
     //数据库方言
     dialect: 'mysql',
     //数据库名
-    database: MYSQL_PRODUCT_DB,
+    database: MYSQL_PRODUCT.DB,
     session: {
       secret: 'session_cookie_name',
       key: 'session_cookie_secret',

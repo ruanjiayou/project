@@ -121,9 +121,12 @@ function fail(data) {
  * 对返回的数据的统一封装处理
  */
 function formatResponse(result) {
+  this.setHeader('Content-Type', 'application/json');
   if (result === undefined || result === null) {
+    this.setHeader('Content-Type', 'text/html');
     this.end();
   } else if (typeof result === 'string') {
+    this.setHeader('Content-Type', 'text/html');
     this.write(result);
     this.end();
   } else if (!_.isNil(this.paginator)) {

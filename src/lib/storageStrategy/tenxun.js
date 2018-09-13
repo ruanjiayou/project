@@ -15,15 +15,16 @@ class Cos {
   _storeOne(file, format) {
     const that = this;
     return new Promise(function (resolve, reject) {
-      const filepath = ioHelper.generatePath(`${format}.${mime.getExtension(file.mimetype)}`);
+      const filepath = ioHelper.generatePath(`${format}.${mime.getExtension(file.mimetype)}`.replace(/\\/g, '/'));
       that.cos.putObject({
         Bucket: `${that.BUCKET}-${that.APPID}`,
         Region: that.REGION,
         Key: filepath,
         ContentLenth: file.size,
-        Body: fs.createReadStream(file.path)
+        Body: fs.createReadStream(file.path.replace(/\\/g, '/'))
       }, (err, res) => {
         if (err) {
+          console.log(new Date().getTime());
           console.log(err);
           resolve('');
         } else {
@@ -42,7 +43,7 @@ class Cos {
     const res2 = {};
     const fields = [];
     const type = typeof format === 'string' ? 'array' : 'object';
-    if (typeof format === 'string') {
+    if (type === 'array') {
       files.forEach(function (item) {
         fields.push(item.fieldname);
         res.push(that._storeOne(item, format));
@@ -57,14 +58,17 @@ class Cos {
         res.push(that._storeOne(item, format[fieldname]));
       });
     }
-    if (type === 'array') {
-      return await Promise.all(res);;
-    } else {
+    res = (await Promise.all(res)).map(function (item) {
+      return item.statusCode == 200 ? item.Location : '';
+    });
+    if (type === 'object') {
       res = await Promise.all(res);
-      res.forEach(function (item, index) {
-        res2[fields[index]].push(item);
+      fields.forEach(function (field) {
+        res2[field].push(item);
       });
       return res2;
+    } else {
+      return res;
     }
   }
   /**
@@ -72,16 +76,15 @@ class Cos {
    * @param {string} filepath 
    */
   async destroy(filepath) {
-    filepath = filepath.replace(/^[/]/, '');
-    const bucket = filepath.split('/')[0];
     const that = this;
     const res = await new Promise(function (resolve, reject) {
       that.cos.deleteObject({
-        Bucket: `${bucket}-${that.APPID}`,
+        Bucket: `${that.BUCKET}-${that.APPID}`,
         Region: that.REGION,
         Key: filepath
       }, (err, data) => {
         if (err) {
+          console.log(err);
           resolve(null);
         } else {
           resolve(data);

@@ -132,23 +132,38 @@ module.exports = {
     return urls;
   },
   /**
-   * @api {post} /v1/test/ali-upload 阿里云对象存储
-   * @apiGroup test-upload
+   * @api {post} /test/ali-upload-array 阿里云对象存储
+   * @apiGroup test-cos-ali
    * @apiParam {string} appid
    * @apiParam {string} secret
    * @apiParam {string} region
    * @apiParam {string} bucket
    * @apiParam {file} images 图片数组
    */
-  'post /test/ali-upload': async (req, res, next) => {
+  'post /test/ali-upload-array': async (req, res, next) => {
     const Cos = require(LIB_PATH + '/storageStrategy/ali');
     const data = req.body;
-    const result = await new Cos(data.appid, data.secret, data.region).create(req.files, 'vehicle-logo/images/{Y}-{m}-{d}/{hh}{ii}{ss}-{6}');
+    const result = await new Cos(data.appid, data.secret, data.region, data.bucket).create(req.files, 'test/{Y}-{m}-{d}/{hh}{ii}{ss}-{6}');
     return result;
   },
   /**
-   * @api {post} /v1/test/wx-upload 腾讯云对象存储
-   * @apiGroup test-upload
+   * @api {delete} /test/ali-upload 阿里云删除文件
+   * @apiGroup test-cos-ali
+   * @apiParam {string} appid
+   * @apiParam {string} secret
+   * @apiParam {string} region
+   * @apiParam {string} bucket
+   * @apiParam {file} filepath 文件路径
+   */
+  'delete /test/ali-upload': async (req, res, next) => {
+    const Cos = require(LIB_PATH + '/storageStrategy/ali');
+    const data = req.body;
+    const result = await new Cos(data.appid, data.secret, data.region, data.bucket).destroy(data.filepath);
+    return result;
+  },
+  /**
+   * @api {post} /test/wx-upload-array 腾讯云对象存储
+   * @apiGroup test-cos-tx
    * @apiParam {string} appid
    * @apiParam {string} secretId
    * @apiParam {string} secretKey
@@ -156,11 +171,27 @@ module.exports = {
    * @apiParam {string} bucket
    * @apiParam {file} images 图片数组
    */
-  'post /test/wx-upload': async (req, res, next) => {
+  'post /test/wx-upload-array': async (req, res, next) => {
     const Cos = require(LIB_PATH + '/storageStrategy/tenxun');
     const data = req.body;
     // console.log(req.files);
-    const result = await new Cos(data.appid, data.secretId, data.secretKey, data.region, data.bucket).create(req.files, 'vehicle-logo/{Y}-{m}-{d}/{hh}{ii}{ss}-{6}');
+    const result = await new Cos(data.appid, data.secretId, data.secretKey, data.region, data.bucket).create(req.files, { test: 'vehicle-logo/{Y}-{m}-{d}/{hh}{ii}{ss}-{6}' });
+    return result;
+  },
+  /**
+   * @api {delete} /test/wx-upload 腾讯云删除文件
+   * @apiGroup test-cos-tx
+   * @apiParam {string} appid
+   * @apiParam {string} secretId
+   * @apiParam {string} secretKey
+   * @apiParam {string} region
+   * @apiParam {string} bucket
+   * @apiParam {string} filepath 文件路径
+   */
+  'delete /test/wx-upload': async (req, res, next) => {
+    const Cos = require(LIB_PATH + '/storageStrategy/tenxun');
+    const data = req.body;
+    const result = await new Cos(data.appid, data.secretId, data.secretKey, data.region, data.bucket).destroy(data.filepath);
     return result;
   },
   /**
