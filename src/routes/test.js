@@ -1,5 +1,6 @@
 const fs = require('fs');
 const wxHelper = require(LIB_PATH + '/wxHelper');
+const streamHelper = require(LIB_PATH + '/streamHelper');
 
 module.exports = {
   /**
@@ -232,7 +233,7 @@ module.exports = {
     return info;
   },
   /**
-   * @api {post} /test/wxm-qrcode 生成小程序二维码
+   * @api {get} /test/wxm-qrcode 生成小程序二维码
    * @apiGroup test-wxm
    * @apiParam {string} appid
    * @apiParam {string} secret
@@ -241,21 +242,42 @@ module.exports = {
    * @apiParam {int} width
    * @apiParam {string='stream','base64'} type stream
    */
-  'post /test/wxm-qrcode': async (req, res, next) => {
-    if (req.body.type === 'stream') {
-      const rs = await new wxHelper(req.body.appid, req.body.secret).getWxmQrcode({
-        'scene': req.body.scene,
-        'page': req.body.page,
-        'width': req.body.width
-      }, 'stream');
+  'get /test/wxm-qrcode': async (req, res, next) => {
+    const rs = await new wxHelper(req.query.appid, req.query.secret).getWxmQrcode({
+      'scene': req.query.scene,
+      'page': req.query.page,
+      'width': req.query.width,
+      'is_hyaline': true
+    }, 'stream');
+    if (req.query.type === 'stream') {
       return rs.pipe(res);
     } else {
-      return new wxHelper(req.body.appid, req.body.secret).getWxmQrcode({
-        'scene': req.body.scene,
-        'page': req.body.page,
-        'width': req.body.width
-      }, req.body.type);
+      const base64Encode = new streamHelper.Base64Encode();
+      res.write('data:image/*;base64,');
+      return rs.pipe(base64Encode).pipe(res);
     }
+  },
+  /**
+   * @api {get} /test/wxm-notify 模板消息列表
+   * @apiGroup test-wxm
+   * @apiParam {string} appid
+   * @apiParam {string} secret
+   */
+  'get /test/wxm-notify': async (req, res, next) => {
+    const result = await new wxHelper(req.query.appid, req.query.secret).getNotifyTpl();
+    return result;
+  },
+  /**
+   * @api {post} /test/wxm-notify 发送模板消息
+   * @apiGroup test-wxm
+   * @apiParam {string} appid
+   * @apiParam {string} secret
+   * @apiParam {string} openid
+   * @apiParam {string} tplId
+   * @apiParam {string} formId
+   */
+  'post /test/wxm-notify': async (req, res, next) => {
+    return await new wxHelper(req.body.appid, req.body.secret).sendNotifyTpl(req.body.openid, req.body.tplId, req.body.formId, ['测试模板消息', '2018-9-15 01:23:33']);
   },
   /**
    * @api {post} /test/wx-sms 发送腾讯云短信

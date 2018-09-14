@@ -91,67 +91,34 @@ class wxHelper {
   /**
    * 生成小程序二维码
    * @param {object} input
-   * @param {string='base64','stream'} [type='stream']
+   * @return {stream}
    */
-  async getWxmQrcode(input, type = 'stream') {
+  async getWxmQrcode(input) {
     const accessToken = await this.getAccessToken();
-    if (type === 'stream') {
-      return request({
-        method: 'POST',
-        url: 'https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=' + accessToken,
-        body: input,
-        json: true
-      });
-    } else {
-      const rs = await request({
-        method: 'POST',
-        url: 'https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=' + accessToken,
-        body: input,
-        json: true
-      });
-      if (type === 'stream') {
-        return rs;
-      }
-      //生成随机文件名
-      const filename = '/image/qr-' + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx.png'.replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-      }).toUpperCase();
-      const fullpath = 'D:\\' + filename;
-      await new Promise(function (resolve, reject) {
-        // 文件流保存
-        const ws = fs.createWriteStream(fullpath);
-        ws.on('finish', function () {
-          resolve(true);
-        });
-        rs.pipe(ws);
-      });
-      if (type === 'url') {
-        return filename;
-      } else {
-        // 文件转base64
-        let rawdata = fs.readFileSync(fullpath);
-        rawdata = new Buffer(rawdata).toString('base64');
-        const result = 'data:image/png;base64,' + rawdata;
-        fs.unlink(fullpath);
-        return result;
-      }
-    }
+    return await request({
+      method: 'POST',
+      url: 'https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=' + accessToken,
+      body: input,
+      json: true
+    });
   }
   /**
    * 获取账号下的模板消息列表
    * @param {int} page 
    * @param {int} offset 
    */
-  static async getNotifyTpl(page = 1, offset = 20) {
+  async getNotifyTpl(page = 1, offset = 20) {
     const accessToken = await this.getAccessToken();
     const notifies = await rp({
       url: 'https://api.weixin.qq.com/cgi-bin/wxopen/template/list',
       qs: {
         access_token: accessToken,
-        offset: page,
+      },
+      body: {
+        offset: (page - 1) * offset,
         count: offset
       },
+      json: true,
       method: 'POST'
     });
     return notifies;
@@ -167,7 +134,6 @@ class wxHelper {
   async sendNotifyTpl(openid, tplId, formId, dataArr) {
     const accessToken = await this.getAccessToken();
     const tplData = {
-      access_token: accessToken,
       touser: openid,
       template_id: tplId,
       form_id: formId,

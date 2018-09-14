@@ -122,19 +122,14 @@ function fail(data) {
  * 对返回的数据的统一封装处理
  */
 function formatResponse(result) {
-  const isstream = result instanceof http.ServerResponse;
   if (result === undefined || result === null) {
-    this.setHeader('Content-Type', 'text/html');
     this.end();
   } else if (typeof result === 'string') {
-    this.setHeader('Content-Type', 'text/html');
     this.write(result);
     this.end();
   } else if (!_.isNil(this.paginator)) {
-    this.setHeader('Content-Type', 'application/json');
     this.json(this.paging(result, this.paginator));
-  } else if (!isstream) {
-    this.setHeader('Content-Type', 'application/json');
+  } else if (!(result instanceof http.ServerResponse)) {
     this.json(result);
   } else {
     // stream
