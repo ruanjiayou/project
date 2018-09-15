@@ -1,5 +1,5 @@
-src/.tmp/
-src/API/logs/*
-src/API/services/
-src/API/controller/
+package-lock.json
 node_modules/
+static/doc
+dev/
+dist/
