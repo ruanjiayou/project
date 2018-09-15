@@ -9,98 +9,69 @@ const models = require(MODEL_PATH + '/index');
  * attributes: include或exclude数组
  * distinct: 去重
  */
-// interface Opts {
-//   t?: any;
-//   transaction?: any;
-//   limit
-//   offset
-//   order
-//   search
-//   where?: any;
-//   scopes?: any;
-//   attributes?: any;
-//   distinct?: string;
-// }
 /**
  * 设计说明: 继承类尽可能不重写方法
  * 1.采取opts的参数方式: 事物t/关联查询scopes/属性attributes/分页limit,offset/查询order,where
  * 2.model和models成员变量
- * 3.
- * TODO:
- * 1.transaction 等参数为null 有什么影响? findxxx()里多了scopes
- * 2.多重事物与多次传递opts(主要是t->transaction)
- * 3.只是基础功能, 复杂的要重写
- * 4.排序的字段是model中有的
  */
 class BaseBLL {
-  // model = null;
-  // models = models;
-  // attributes = new Set();
   constructor() {
     this.models = models;
+    this.model = null;
+    this.attributes = new Set();
   }
   /**
    * 处理转化参数
    * @param opts 对象处理转换[t][where][query:where,limit,offset,order][scopes][attributes]
    */
   _init(opts) {
-    const opt = {};
+    const opt = {
+      where: {},
+      order: []
+    };
     // 允许多次调用_init()
     opts = _.cloneDeep(opts);
-    if (/^\d+$/.test(opts.limit)) {
+    // 分页
+    if (_.isInteger(opts.limit)) {
       opt.limit = opts.limit;
     }
-    if (/^\d+$/.test(opts.page)) {
+    if (_.isInteger(opts.page)) {
       opt.offset = (opts.page - 1) * opt.limit;
     }
+    // 事务
     opt.transaction = _.isNil(opts.t) ? null : opts.t;
     if (opts.transaction) {
       opt.transaction = opts.transaction;
     }
+    // 关联查询
     opt.scopes = _.isArray(opts.scopes) ? opts.scopes : [];
-    if (_.isNil(opts.where)) {
-      opt.where = {};
-    } else if (/^\d+$/.test(opts.where)) {
-      opt.where = {};
+    if (/^\d+$/.test(opts.where)) {
       opt.where[this.model.primaryKeyAttribute] = opts.where;
-    } else {
+    } else if (!_.isNil(opts.where)) {
       opt.where = opts.where;
     }
-    // 指定要返回的字段数组,或指定不返还的字段exclude数组
-    if (_.isArray(opts.attributes)) {
-      opt.attributes = [];
-      const exclude = [];
-      opts.attributes.forEach((attr) => {
-        if (/^[!]/.test(attr) && this.attributes.has(attr.substr(1))) {
-          exclude.push(attr.substr(1));
-        } else if (this.attributes.has(attr)) {
-          opt.attributes.push(attr);
-        }
-      });
-      if (exclude.length !== 0) {
-        opt.attributes = { exclude };
+    // 部分字段,其他的不要/去掉部分字段,其他的都要
+    if (_.isString(opts.attributes)) {
+      if (opts.attributes[0] === '!') {
+        opt.attributes = _.filter(this.attributes, opts.attributes.substr(1).split(','));
+      } else {
+        opt.attributes = opts.attributes.split(',');
       }
     }
     // 笛卡尔积重复的问题
-    if (_.isString(opts.distinct) && this.attributes.has(opts.distinct)) {
+    if (this.attributes.has(opts.distinct)) {
       opt.include = [];
       opt.distinct = true;
       opt.col = opts.distinct;
     }
-    // id或paging()生成的query有limit where offset order
     // order排序
-    opt.order = [];
     if (_.isString(opts.order)) {
       opts.order = [opts.order];
-    } else if (_.isNil(opts.order)) {
-      opts.order = [];
     }
     opts.order.forEach((item) => {
-      if (_.isString(item)) {
-        const order = item.split('-');
-        if (this.attributes.has(order[0]) && ['DESC', 'ASC'].indexOf(order[1]) !== -1) {
-          opt.order.push(order);
-        }
+      const [key, method] = item.split('-');
+      if (this.attributes.has(key) && (method === 'DESC' || method === 'ASC')) {
+        opt.order.push([key, method]);
       }
     });
     return opt;
@@ -131,15 +102,13 @@ class BaseBLL {
    * @param [t] 事物
    */
   async create(data, t = {}) {
-    const res = await this.model.create(data, t);
-    return res;
+    return this.model.create(data, t);
   };
   /**
    * 删除数据
    */
   async destroy(opts) {
-    const opt = this._init(opts);
-    return await this.model.destroy(opt);
+    return this.model.destroy(this._init(opts));
   };
   /**
    * 修改记录
@@ -148,7 +117,7 @@ class BaseBLL {
    */
   async update(data, opts = {}) {
     const opt = this._init(opts);
-    const res = await this.get(opts);
+    const res = await this.getInfo(opts);
     if (!_.isNil(res)) {
       await res.update(data, opt);
     }
@@ -161,7 +130,7 @@ class BaseBLL {
    */
   async getAll(opts = {}) {
     const opt = this._init(opts);
-    return await this.model.scope(opt.scopes).findAll(opt);
+    return this.model.scope(opt.scopes).findAll(opt);
   };
   /**
    * 获取分页列表
@@ -180,7 +149,7 @@ class BaseBLL {
    * 获取记录详情
    * @param opts [t][scopes][attributes][query]
    */
-  async get(opts = {}) {
+  async getInfo(opts = {}) {
     const opt = this._init(opts);
     return this.model.scope(opt.scopes).findOne(opt);
   };

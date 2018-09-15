@@ -17,7 +17,7 @@ class UserBLL extends BaseBLL {
   async auth(req) {
     const data = auth.decode(req);
     const where = { token: data.token };
-    const user = await this.get({ where });
+    const user = await this.getInfo({ where });
     if (_.isNil(user)) {
       thrower('auth', 'authFail');
     }
@@ -37,7 +37,7 @@ class UserBLL extends BaseBLL {
     const input = validation.validate(body);
     const wxInfo = await wxHelper.getWxOpenId(systemCfg.wxAppId, systemCfg.wxSecret, input.code);
     const where = { openid: wxInfo.openid };
-    const user = await this.get({ where });
+    const user = await this.getInfo({ where });
     if (_.isNil(user)) {
       thrower('auth', 'error');
     }
@@ -68,7 +68,7 @@ class UserBLL extends BaseBLL {
     const input = validation.validate(body);
     const wxInfo = await wxHelper.getWxOpenId(systemCfg.wxAppId, systemCfg.wxSecret, input.code);
     const where = { openid: wxInfo.openid };
-    let user = await this.get({ where });
+    let user = await this.getInfo({ where });
     if (_.isNil(user)) {
       const wxToken = wxHelper.generateToken(wxInfo.openid);
       input.token = wxToken;
@@ -84,7 +84,7 @@ class UserBLL extends BaseBLL {
    */
   async sign(req) {
     const data = auth.decode(req);
-    const user = await this.get({ where: data.id });
+    const user = await this.getInfo({ where: data.id });
     if (_.isNil(user) || user.password !== data.token) {
       thrower('auth', 'authFail');
     }
@@ -103,7 +103,7 @@ class UserBLL extends BaseBLL {
     });
     const input = validation.validate(body);
     const where = { phone: input.phone };
-    const user = await this.get({ where });
+    const user = await this.getInfo({ where });
     if (_.isNil(user)) {
       thrower('auth', 'accountError');
     }
@@ -137,7 +137,7 @@ class UserBLL extends BaseBLL {
     input.salt = new Date().getTime().toString();
     input.password = this.model.calculatePSW(input.password, input.salt);
     const where = { phone: input.phone };
-    let user = await this.get({ where });
+    let user = await this.getInfo({ where });
     if (!_.isNil(user)) {
       thrower('auth', 'existed');
     }
@@ -175,7 +175,7 @@ class UserBLL extends BaseBLL {
       }
     });
     const query = input.id;
-    const user = await this.get({ query });
+    const user = await this.getInfo({ query });
     await user.update(input, opt);
     return user;
   }

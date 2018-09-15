@@ -43,9 +43,11 @@ x-api: group
 ```
 ```
 特点:
-  1.超灵活的路由写法,支持组合API. { 'get /v1/admin/self': async(req,res,next)=>{} }
+  1.超灵活的路由写法,支持组合API(涉及文件的要注意name区分). { 'get /v1/admin/self': async(req,res,next)=>{} }
   2.强大的参数过滤. validater-max(人性化的功能,method/default/format/empty/required/nullable/nonzero/)
   3.总体设计一般般,毕竟出道才2年.
   4.大部分配置在项目启动时从数据库中取得
 ```
-TODO:controller有用?res.error()有用?组合API能调用?lib文件夹补全!email;log;upload
+TODO:
+
+清理分支; 定时任务定时器;
