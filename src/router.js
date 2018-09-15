@@ -1,6 +1,5 @@
 const _ = require('lodash');
 const loader = require(LIB_PATH + '/loader');
-const presenter = require(LIB_PATH + '/presenter');
 let routes = [];
 
 /**
