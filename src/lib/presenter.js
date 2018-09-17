@@ -10,7 +10,7 @@ const http = require('http');
  * @returns status/result/paging
  */
 function prePaging(result, query) {
-  let rows = result ? result.rows.map(function (item) { return item.toJSON ? item.toJSON() : item; }) : [];
+  let rows = _.isArray(result) ? result : (result.rows ? result.rows.map(function (item) { return item.toJSON ? item.toJSON() : item; }) : []);
   let total = result ? result.count : 0;
   const response = {};
   response[RES_STATUS] = RES_SUCCESS;
@@ -127,8 +127,6 @@ function formatResponse(result) {
   } else if (typeof result === 'string') {
     this.write(result);
     this.end();
-  } else if (!_.isNil(this.paginator)) {
-    this.json(this.paging(result, this.paginator));
   } else if (!(result instanceof http.ServerResponse)) {
     this.json(result);
   } else {

@@ -133,6 +133,7 @@ module.exports = function (app) {
         // 普通API
         try {
           const result = await route.handle(req, res, next);
+          // 处理列表分页
           res.formatResponse(result);
         } catch (e) {
           next(e);

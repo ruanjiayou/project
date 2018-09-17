@@ -68,12 +68,14 @@ class BaseBLL {
     if (_.isString(opts.order)) {
       opts.order = [opts.order];
     }
-    opts.order.forEach((item) => {
-      const [key, method] = item.split('-');
-      if (this.attributes.has(key) && (method === 'DESC' || method === 'ASC')) {
-        opt.order.push([key, method]);
-      }
-    });
+    if (_.isArray(opts.order)) {
+      opts.order.forEach((item) => {
+        const [key, method] = item.split('-');
+        if (this.attributes.has(key) && (method === 'DESC' || method === 'ASC')) {
+          opt.order.push([key, method]);
+        }
+      });
+    }
     return opt;
   }
   /**
@@ -88,7 +90,7 @@ class BaseBLL {
    * 获取model的属性数组
    */
   getAttributes() {
-    return this.model.getAttributes();
+    return new Set(this.model.getAttributes());
   }
   /**
    * 生成一个事物
@@ -140,6 +142,8 @@ class BaseBLL {
   async getList(opts = {}) {
     const opt = this._init(opts);
     if (opt.limit === 0) {
+      delete opt.offset;
+      delete opt.limit;
       return this.model.scope(opt.scopes).findAll(opt);
     } else {
       return this.model.scope(opt.scopes).findAndCountAll(opt);
