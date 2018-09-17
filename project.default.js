@@ -16,22 +16,24 @@ if (process.env.NODE_ENV === undefined) {
 }
 
 // 项目单独参数
-define('PROJECT_NAME', 'utils-web');
-define('UI_SITE', 'http://180.76.183.201:2017');
+define('PROJECT_NAME', 'project');
+define('UI_SITE', 'http://127.0.0.1:2017');
 
 // 数据库
-define('MYSQL_DEV_USER', 'root');
-define('MYSQL_DEV_PASS', '');
-define('MYSQL_DEV_HOST', '127.0.0.1');
-define('MYSQL_DEV_PORT', '3306');
-define('MYSQL_DEV_DB', 'test');
-
-define('MYSQL_PRODUCT_USER', 'root');
-define('MYSQL_PRODUCT_PASS', '');
-define('MYSQL_PRODUCT_HOST', '127.0.0.1');
-define('MYSQL_PRODUCT_PORT', '3306');
-define('MYSQL_PRODUCT_DB', 'test');
-
+define('MYSQL_DEV', {
+  USER: 'root',
+  PASS: '',
+  HOST: '127.0.0.1',
+  PORT: '3306',
+  DB: 'project-dev'
+});
+define('MYSQL_PRODUCT', {
+  USER: 'root',
+  PASS: '',
+  HOST: '127.0.0.1',
+  PORT: '3306',
+  DB: 'project-product'
+});
 // 从数据库中拉取配置,定义全局常量
 module.exports = async function (cb) {
   const models = require(MODEL_PATH + '/index');
@@ -44,6 +46,7 @@ module.exports = async function (cb) {
       case 'string': break;
       default: v = JSON.parse(v); break;
     }
+    console.log(v);
     define(item.name, v);
   });
   if (cb) {
