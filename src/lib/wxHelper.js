@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const rp = require('request-promise');
 const request = require('request');
 
-// TODO: 二维码 6.统一下单 7.发送消息
+// TODO: 6.统一下单
 class wxHelper {
   constructor(wxAppId, wxSecret) {
     this.wxAppId = wxAppId;
