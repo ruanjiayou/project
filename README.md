@@ -50,6 +50,22 @@ x-api: group
   3.总体设计一般般,毕竟出道才2年.
   4.大部分配置在项目启动时从数据库中取得
 ```
+####静态化,效益可观
+```js
+// get /v2/public/book/:bookId([0-9]+)/chapters
+let result = null;
+const cachePath = `${CACHE_PATH}/books/${req.params.bookId}.json`;
+if (ioHelper.isFileExists(cachePath)) {
+  console.log('已有缓存');//17ms
+  result = JSON.parse(ioHelper.readTxt(cachePath));
+} else {
+  console.log('生成缓存');//266ms
+  result = await chapterBLL.getList({ limit: 0, where: { bookId: req.params.bookId }, attributes: 'id,bookId,title' });
+  result = _.isArray(result) ? result : (result.rows ? result.rows.map(function (item) { return item.toJSON ? item.toJSON() : item; }) : []);
+  ioHelper.writeTxt(cachePath, JSON.stringify(result));
+}
+return res.return(result);
+```
 TODO:
 
 清理分支; 定时任务定时器;

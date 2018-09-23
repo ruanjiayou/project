@@ -124,7 +124,7 @@ function fail(data) {
 function formatResponse(result) {
   if (result === undefined || result === null) {
     this.end();
-  } else if (typeof result === 'string') {
+  } else if (typeof result === 'string' || result instanceof Buffer) {
     this.write(result);
     this.end();
   } else if (!(result instanceof http.ServerResponse)) {
