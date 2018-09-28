@@ -1,5 +1,5 @@
 package-lock.json
 node_modules/
-static/doc
+static/
 dev/
 dist/
