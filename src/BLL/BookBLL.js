@@ -23,7 +23,7 @@ class BookBLL extends BaseBLL {
       }
     });
     const where = validation.validate(input);
-    let book = await this.get({ where: { name: where.name, authorName: where.authorName } });
+    let book = await this.getInfo({ where: { name: where.name, authorName: where.authorName } });
     if (_.isNil(book)) {
       book = await this.create(input);
     }
@@ -52,12 +52,13 @@ class BookBLL extends BaseBLL {
       }
     });
     const data = validation.validate(input);
-    const classify = (await new ClassifyBLL()).get({ where: data.cId });
-    if (_.isNil(classify)) {
-      thrower('common', 'notFound');
-    } else {
-      data['cName'] = classify['name'];
-    }
+    // TODO:
+    // const classify = (await new ClassifyBLL()).getInfo({ where: data.cId });
+    // if (_.isNil(classify)) {
+    //   thrower('common', 'notFound');
+    // } else {
+    //   data['cName'] = classify['name'];
+    // }
     const result = await this.model.create(data);
     return result;
   }

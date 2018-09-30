@@ -26,14 +26,15 @@ module.exports = {
    */
   'get /v2/public/book/:bookId([0-9]+)/chapter/:chapterId([0-9]+)': async (req, res, next) => {
     let result = null;
-    const cachePath = `${CACHE_PATH}/chapters/${req.params.bookId}/${req.params.chapterId}.json`;
-    if (ioHelper.isFileExists(cachePath)) {
-      result = JSON.parse(ioHelper.readTxt(cachePath));
-    } else {
-      ioHelper.mkdirs(`${CACHE_PATH}/chapters/${req.params.bookId}`);
-      result = await chapterBLL.getInfo({ where: req.params.chapterId });
-      ioHelper.writeTxt(cachePath, JSON.stringify(result));
-    }
+    // const cachePath = `${CACHE_PATH}/chapters/${req.params.bookId}/${req.params.chapterId}.json`;
+    // if (ioHelper.isFileExists(cachePath)) {
+    //   result = JSON.parse(ioHelper.readTxt(cachePath));
+    // } else {
+    //   ioHelper.mkdirs(`${CACHE_PATH}/chapters/${req.params.bookId}`);
+    //   result = await chapterBLL.getInfo({ where: req.params.chapterId });
+    //   ioHelper.writeTxt(cachePath, JSON.stringify(result));
+    // }
+    result = await chapterBLL.getInfo({ where: req.params.chapterId });
     return res.return(result);
   }
 };

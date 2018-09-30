@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const models = require(MODEL_PATH + '/index');
 const BookBLL = require(BLL_PATH + '/BookBLL');
 const bookBLL = new BookBLL();
 
@@ -16,6 +17,31 @@ module.exports = {
     const hql = req.paging();
     const result = await bookBLL.getList(hql);
     return res.paging(result, hql);
+  },
+  /**
+   * @api {put} /v2/public/book
+   * @apiGroup public-book
+   * @apiParam {int} name
+   * @apiParam {int} authorName
+   * @apiParam {int} poster
+   * @apiParam {int} description
+   */
+  'put /v2/public/book': async (req, res, next) => {
+    let result = await bookBLL.getInfo({ where: { name: req.body.name, authorName: req.body.authorName } });
+    if (result) {
+      await result.update({ poster: req.body.poster, description: req.body.description, words: req.body.words, inited: 1 });
+      await models.Chapter.update({ bookId: req.body.bookId }, { where: { bookId: result.id } });
+      return res.success();
+    } else {
+      // 后续下载
+      let user = await models.User.findOne({ where: { name: req.body.authorName } });
+      if (user == null) {
+        user = await models.User.create({ name: req.body.name });
+      }
+      req.body.authorId = user.id;
+      result = await bookBLL.create(req.body);
+      return res.return(result);
+    }
   },
   /**
    * @api {get} /v2/public/book/:bookId 书籍详情
