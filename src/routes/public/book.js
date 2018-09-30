@@ -36,7 +36,7 @@ module.exports = {
       // 后续下载
       let user = await models.User.findOne({ where: { name: req.body.authorName } });
       if (user == null) {
-        user = await models.User.create({ name: req.body.name });
+        user = await models.User.create({ name: req.body.authorName });
       }
       req.body.authorId = user.id;
       result = await bookBLL.create(req.body);

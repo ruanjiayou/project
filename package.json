@@ -15,6 +15,7 @@
     "babel-preset-env": "^1.7.0",
     "baidu-aip-sdk": "^2.3.3",
     "body-parser": "^1.18.3",
+    "cheerio": "^1.0.0-rc.2",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.3",
     "cos-nodejs-sdk-v5": "^2.4.10",
@@ -27,6 +28,7 @@
     "gulp-nodemon": "^2.2.1",
     "gulp-uglify": "^3.0.1",
     "helmet": "^3.13.0",
+    "html-parser2": "^1.0.1",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.10",
     "mime": "^2.3.1",
@@ -41,6 +43,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "sequelize": "^4.38.0",
+    "uri-parser-helper": "^1.0.6",
     "validater-max": "^1.0.0"
   },
   "devDependencies": {}
