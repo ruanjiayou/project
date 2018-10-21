@@ -42,7 +42,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   // 表的初始化数据
   model.seed = async () => {
-    const data = [];
+    const data = [
+      { name: 'PROJECT_NAME', value: 'project-test', type: "string", mark: "pm2项目名称" },
+      { name: 'UI_SITE', value: 'http://180.76.183.201:2017', type: "string", mark: "自定义常量" },
+    ];
     await model.bulkCreate(data);
   }
   // instance method

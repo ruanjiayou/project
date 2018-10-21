@@ -3,47 +3,45 @@ const aliStorage = require('./storageStrategy/ali');
 const tenxunStorage = require('./storageStrategy/tenxun');
 
 class Storager {
-  static async create(files, format) {
-    switch (C_STOREAGE_TYPE) {
-      case 'tx':
-        return await new tenxunStorage(
-          COS[C_STOREAGE_TYPE][APPID],
-          COS[C_STOREAGE_TYPE][SECRETID],
-          COS[C_STOREAGE_TYPE][SECRETKEY],
-          COS[C_STOREAGE_TYPE][REGION],
-          COS[C_STOREAGE_TYPE][BUCKET]
-        ).create(files, format);
-      case 'ali':
-        return await new aliStorage(
-          COS[C_STOREAGE_TYPE][APPID],
-          COS[C_STOREAGE_TYPE][SECRET],
-          COS[C_STOREAGE_TYPE][REGION],
-          COS[C_STOREAGE_TYPE][BUCKET]
-        ).create(files, format);
-      default:
-        return await localStorage.create(files, format);
+  /**
+   * 文件保存策略
+   * @param {string} strategy local/tx/ali/baidu
+   */
+  constructor(strategy) {
+    let storage = localStorage;
+    if (strategy === 'tx') {
+      storage = new tenxunStorage(
+        COS['tx'][APPID],
+        COS['tx'][SECRETID],
+        COS['tx'][SECRETKEY],
+        COS['tx'][REGION],
+        COS['tx'][BUCKET]
+      );
     }
+    if (strategy === 'ali') {
+      storage = new aliStorage(
+        COS['ali'][APPID],
+        COS['ali'][SECRET],
+        COS['ali'][REGION],
+        COS['ali'][BUCKET]
+      );
+    }
+    return storage;
   }
-  static async destroy(filepath) {
-    switch (C_STOREAGE_TYPE) {
-      case 'tx':
-        new tenxunStorage(
-          COS[C_STOREAGE_TYPE][APPID],
-          COS[C_STOREAGE_TYPE][SECRETID],
-          COS[C_STOREAGE_TYPE][REGION],
-          COS[C_STOREAGE_TYPE][BUCKET]
-        ).destroy(filepath);
-      case 'ali':
-        aliStorage(
-          COS[C_STOREAGE_TYPE][APPID],
-          COS[C_STOREAGE_TYPE][SECRET],
-          COS[C_STOREAGE_TYPE][REGION],
-          COS[C_STOREAGE_TYPE][BUCKET]
-        ).destroy(filepath);
-      default:
-        localStorage.destroy(filepath);
-    }
-    return;
+  /**
+   * 保存文件
+   * @param {file} files 
+   * @param {格式} format 
+   */
+  async create(files, format) {
+
+  }
+  /**
+   * 删除文件
+   * @param {string} filepath 文件路径
+   */
+  async destroy(filepath) {
+
   }
 }
 

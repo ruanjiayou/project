@@ -54,7 +54,7 @@ class smsHelper {
 
   }
   async send(info, params) {
-    let signature = smsHelper.signature(info.phone);
+    let signature = this.signature(info.phone);
     let result = await shttp
       .post(`https://yun.tim.qq.com/v5/tlssmssvr/sendsms`)
       .query({

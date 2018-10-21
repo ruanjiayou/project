@@ -1,7 +1,7 @@
 global.define = function (key, value) {
   global[key] = value;
 };
-
+// 约定目录
 // 项目路径
 define('ROOT_PATH', __dirname);
 // 应用程序路径,固定写src,想根据NODE_ENV改也可以
@@ -27,25 +27,50 @@ define('PLUGIN_PATH', `${APP_PATH}/plugin`);
 // 静态文件路径
 define('STATIC_PATH', `${ROOT_PATH}/static`);
 
-// 请求字段
+// 端口和环境: 环境由命令行确定,端口这里配置
+define('PORT', 3000);
+define('NODE_ENV', process.env.NODE_ENV);
+
+define('PROJECT_NAME', 'test');
+
+// 约定名称
+// 请求约定字段
 define('REQ_PAGE', 'page');
 define('REQ_LIMIT', 'limit');
 define('REQ_SEARCH', 'search');
 define('REQ_ORDER', 'order');
-// 返回字段
+// 约定返回字段
 define('RES_SUCCESS', 'success');
 define('RES_FAIL', 'fail');
 define('RES_STATUS', 'state');
 define('RES_DATA', 'rdata');
 define('RES_CODE', 'ecode');
 define('RES_ERROR', 'error');
-// 分页
-define('RES_PAGINATOR', 'paginator');
-define('RES_PAGINATOR_PAGE', 'page');
-define('RES_PAGINATOR_PAGES', 'pages');
-define('RES_PAGINATOR_LIMIT', 'limit');
-define('RES_PAGINATOR_COUNT', 'count');
-define('RES_PAGINATOR_TOTAL', 'total');
+// 约定分页字段
+define('RES_PAGER', 'pager');
+define('RES_PAGER_PAGE', 'page');
+define('RES_PAGER_PAGES', 'pages');
+define('RES_PAGER_LIMIT', 'limit');
+define('RES_PAGER_COUNT', 'count');
+define('RES_PAGER_TOTAL', 'total');
+// 默认后缀
+define('DEFAULT_INDEX', ['.html']);
 
-// 默认支持后缀
-define('DEFAULT_INDEX', ['.html', '.htm']);
+// 支持的api版本
+define('VERSION', ['v1']);
+
+// 数据库
+define('MYSQL_DEV', {
+  USER: 'root',
+  PASS: '',
+  HOST: '127.0.0.1',
+  PORT: '3306',
+  DB: 'project_test'
+});
+define('MYSQL_PRODUCT', {
+  USER: 'root',
+  PASS: '',
+  HOST: '127.0.0.1',
+  PORT: '3306',
+  DB: 'project_test'
+});

@@ -1,8 +1,10 @@
 const _ = require('lodash');
-const auth = require(LIB_PATH + '/authHelper');
+const AuthHelper = require(LIB_PATH + '/authHelper');
 const BaseBLL = require(BLL_PATH + '/BaseBLL');
 const validater = require(LIB_PATH + '/validater');
 const thrower = require(LIB_PATH + '/thrower');
+
+const authHelper = new AuthHelper(global.auth);
 
 class UserBLL extends BaseBLL {
   constructor() {
@@ -15,7 +17,7 @@ class UserBLL extends BaseBLL {
    * @param req 请求对象
    */
   async auth(req) {
-    const data = auth.decode(req);
+    const data = authHelper.decode(req);
     const where = { token: data.token };
     const user = await this.getInfo({ where });
     if (_.isNil(user)) {
@@ -45,7 +47,7 @@ class UserBLL extends BaseBLL {
     //await user.update({ token: wxToken });
     //return wxToken;
     const token = new Date().getTime();
-    const authorization = auth.encode({
+    const authorization = authHelper.encode({
       role: 'user',
       id: user.id,
       token
@@ -83,7 +85,7 @@ class UserBLL extends BaseBLL {
    * @param req 请求对象
    */
   async sign(req) {
-    const data = auth.decode(req);
+    const data = authHelper.decode(req);
     const user = await this.getInfo({ where: data.id });
     if (_.isNil(user) || user.password !== data.token) {
       thrower('auth', 'authFail');
@@ -110,7 +112,7 @@ class UserBLL extends BaseBLL {
     if (!user.comparePSW(input.password)) {
       thrower('auth', 'accountError');
     }
-    const authorization = auth.encode({
+    const authorization = authHelper.encode({
       role: 'user',
       id: user.id,
       token: user.password
