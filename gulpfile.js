@@ -134,7 +134,7 @@ gulp.task('dev', () => {
 });
 gulp.task('publish', ['doc'], () => {
   require('./config.project');
-  publish('product', 3001 /* PORT */, PROJECT_NAME);
+  publish('product', PORT, PROJECT_NAME);
 });
 
 gulp.task('migration', () => {
